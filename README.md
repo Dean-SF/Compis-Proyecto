@@ -1,2 +1,5 @@
 # P1-Compis
-Va salir mal :D
+¿Que podria malir sal?
+Indeed, va malir sal :D
+
+
