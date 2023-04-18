@@ -22,7 +22,7 @@ import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
+import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
@@ -76,7 +76,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * Generates DefaultMutableTreeNodes, used to draw a JTree.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TreeVisitor implements Visitor {
       
@@ -96,8 +96,8 @@ public class TreeVisitor implements Visitor {
         return(createBinary("Call Command", ast.I, ast.APS));
     }
     
-    public Object visitEmptyCommand(EmptyCommand ast, Object o) {
-        return(createNullary("Empty Command"));
+    public Object visitSkipCommand(SkipCommand ast, Object o) {
+        return(createNullary("Skip Command"));
     }
     
     public Object visitIfCommand(IfCommand ast, Object obj) {

@@ -34,7 +34,7 @@ import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
+import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
@@ -101,7 +101,7 @@ public class LayoutVisitor implements Visitor {
     return layoutBinary("CallCom.", ast.I, ast.APS);
    }
 
-  public Object visitEmptyCommand(EmptyCommand ast, Object obj) {
+  public Object visitSkipCommand(SkipCommand ast, Object obj) {
     return layoutNullary("EmptyCom.");
   }
 

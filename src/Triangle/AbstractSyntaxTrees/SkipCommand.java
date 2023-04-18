@@ -16,13 +16,13 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
-public class EmptyCommand extends Command {
+public class SkipCommand extends Command {
 
-  public EmptyCommand (SourcePosition thePosition) {
+  public SkipCommand (SourcePosition thePosition) {
     super (thePosition);
   }
 
   public Object visit(Visitor v, Object o) {
-    return v.visitEmptyCommand(this, o);
+    return v.visitSkipCommand(this, o);
   }
 }

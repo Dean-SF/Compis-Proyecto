@@ -33,7 +33,7 @@ import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
+import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
@@ -292,7 +292,15 @@ public class Parser {
         }
       }
       break;
-
+    
+    case Token.SKIP: {
+      acceptIt();
+      finish(commandPos);
+      commandAST = new SkipCommand(commandPos);
+      break;
+    }
+    
+    /*
     case Token.BEGIN:
       acceptIt();
       commandAST = parseCommand();
@@ -342,7 +350,7 @@ public class Parser {
 
       finish(commandPos);
       commandAST = new EmptyCommand(commandPos);
-      break;
+      break;*/
 
     default:
       syntacticError("\"%\" cannot start a command",
