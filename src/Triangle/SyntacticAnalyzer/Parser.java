@@ -300,6 +300,18 @@ public class Parser {
       break;
     }
     
+    case Token.IF: {
+      acceptIt();
+      Expression eAST = parseExpression();
+      accept(Token.THEN);
+      Command acceptCommandAST = parseCommand();
+      Command elseCommandAST = ifChainParser();
+      accept(Token.END);
+      finish(commandPos);
+      commandAST = new IfCommand(eAST, acceptCommandAST, elseCommandAST, commandPos);
+      break;
+    }
+
     /*
     case Token.BEGIN:
       acceptIt();
@@ -360,6 +372,36 @@ public class Parser {
     }
 
     return commandAST;
+  }
+
+  Command ifChainParser() throws SyntaxError {
+    Command ifChainAST = null;
+    SourcePosition commandPos = new SourcePosition();
+    start(commandPos);
+
+    switch (currentToken.kind) {
+      case Token.ELIF:
+        acceptIt();
+        Expression eAST = parseExpression();
+        accept(Token.THEN);
+        Command acceptCommandAST = parseCommand();
+        Command elseCommandAST = ifChainParser();
+        finish(commandPos);
+        ifChainAST = new IfCommand(eAST, acceptCommandAST, elseCommandAST, commandPos);
+        break;
+      
+      case Token.ELSE:
+        acceptIt();
+        ifChainAST = parseCommand();
+        break;
+
+      default:
+          syntacticError("\"%\" cannot be used to continue the if command",
+          currentToken.spelling);
+        break;
+    }
+
+    return ifChainAST;
   }
 
 ///////////////////////////////////////////////////////////////////////////////

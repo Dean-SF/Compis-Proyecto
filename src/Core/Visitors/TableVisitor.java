@@ -549,8 +549,6 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitOperator(Operator ast, Object o) { 
-      ast.decl.visit(this, null);
-  
       return(null);
   }
   // </editor-fold>
