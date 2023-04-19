@@ -61,6 +61,11 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatTimesCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -79,7 +84,6 @@ import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
 
 public class LayoutVisitor implements Visitor {
 
@@ -117,10 +121,26 @@ public class LayoutVisitor implements Visitor {
     return layoutBinary("Seq.Com.", ast.C1, ast.C2);
   }
 
-  public Object visitWhileCommand(WhileCommand ast, Object obj) {
-    return layoutBinary("WhileCom.", ast.E, ast.C);
+  public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object obj) {
+    return layoutBinary("RepWCom.", ast.E, ast.C);
   }
 
+  public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object obj) {
+    return layoutBinary("RepUCom.", ast.E, ast.C);
+  }
+
+  public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object obj) {
+    return layoutBinary("RepTCom.", ast.E, ast.C);
+  }
+
+  public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object obj) {
+    return layoutBinary("RepDWCom.", ast.C, ast.E);
+  }
+
+  public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object obj) {
+    return layoutBinary("RepDUCom.", ast.C, ast.E);
+  }
+  
 
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object obj) {

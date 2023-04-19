@@ -80,32 +80,35 @@ final class Token extends Object {
     OF			= 14,
     PROC		= 15,
     RECORD	= 16,
-    SKIP    = 17,
-    THEN		= 18,
-    TYPE		= 19,
-    VAR			= 20,
-    WHILE		= 21,
+    REPEAT  = 17,
+    SKIP    = 18,
+    THEN		= 19,
+    TIMES   = 20,
+    TYPE		= 21,
+    UNTIL   = 22,
+    VAR			= 23,
+    WHILE		= 24,
 
     // punctuation...
-    DOT			= 22,
-    ELIF    = 23,
-    COLON		= 24,
-    SEMICOLON	= 25,
-    COMMA		= 26,
-    BECOMES		= 27,
-    IS			= 28,
+    DOT			= 25,
+    ELIF    = 26,
+    COLON		= 27,
+    SEMICOLON	= 28,
+    COMMA		= 29,
+    BECOMES	= 30,
+    IS			= 31,
 
     // brackets...
-    LPAREN		= 29,
-    RPAREN		= 30,
-    LBRACKET	= 31,
-    RBRACKET	= 32,
-    LCURLY		= 33,
-    RCURLY		= 34,
+    LPAREN		= 32,
+    RPAREN		= 33,
+    LBRACKET	= 34,
+    RBRACKET	= 35,
+    LCURLY		= 36,
+    RCURLY		= 37,
 
     // special tokens...
-    EOT			= 35,
-    ERROR		= 36;
+    EOT			= 38,
+    ERROR		= 39;
 
   private static String[] tokenTable = new String[] {
     "<int>",
@@ -125,9 +128,12 @@ final class Token extends Object {
     "of",
     "proc",
     "record",
+    "repeat",
     "skip",
     "then",
+    "times",
     "type",
+    "until",
     "var",
     "while",
     ".",
@@ -151,3 +157,5 @@ final class Token extends Object {
   				lastReservedWord  = Token.WHILE;
 
 }
+
+
