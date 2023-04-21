@@ -306,6 +306,20 @@ public class Parser {
       commandAST = new SkipCommand(commandPos);
       break;
     }
+
+    //Ericka "let" Declaration "in" Command "end"
+    case Token.LET:
+      {
+        acceptIt();
+        Declaration dAST = parseDeclaration();
+        accept(Token.IN);
+        Command cAST = parseCommand();
+        accept(Token.END);
+        finish(commandPos);
+        commandAST = new LetCommand(dAST, cAST, commandPos);
+        break;
+      }
+      
     
     case Token.IF: {
       acceptIt();
