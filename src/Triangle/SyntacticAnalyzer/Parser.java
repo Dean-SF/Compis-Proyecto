@@ -37,6 +37,9 @@ import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
@@ -62,6 +65,11 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatTimesCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -80,7 +88,6 @@ import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
 
 public class Parser {
 
@@ -300,6 +307,125 @@ public class Parser {
       break;
     }
     
+    case Token.IF: {
+      acceptIt();
+      Expression eAST = parseExpression();
+      accept(Token.THEN);
+      Command acceptCommandAST = parseCommand();
+      Command elseCommandAST = ifChainParser();
+      accept(Token.END);
+      finish(commandPos);
+      commandAST = new IfCommand(eAST, acceptCommandAST, elseCommandAST, commandPos);
+      break;
+    }
+
+    case Token.REPEAT: {
+      Expression eAST = null;
+      Command cAST = null;
+      acceptIt();
+      switch (currentToken.kind) {
+        case Token.WHILE:
+          acceptIt();
+          eAST = parseExpression();
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new RepeatWhileCommand(eAST, cAST, commandPos);
+          break;
+        case Token.UNTIL:
+          acceptIt();
+          eAST = parseExpression();
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new RepeatUntilCommand(eAST, cAST, commandPos);
+          break;
+        case Token.DO:
+          acceptIt();
+          cAST = parseCommand();
+          switch (currentToken.kind) {
+            case Token.WHILE:
+              acceptIt();
+              eAST = parseExpression();
+              accept(Token.END);
+              finish(commandPos);
+              commandAST = new RepeatDoWhileCommand(eAST, cAST, commandPos);
+              break;
+            
+            case Token.UNTIL:
+              acceptIt();
+              eAST = parseExpression();
+              accept(Token.END);
+              finish(commandPos);
+              commandAST = new RepeatDoUntilCommand(eAST, cAST, commandPos);
+              break;
+          
+            default:
+              syntacticError("\"%\" cannot continue a Repeat Do command",
+              currentToken.spelling);
+              break;
+          }
+
+          break;
+        
+        default:
+          eAST = parseExpression();
+          accept(Token.TIMES);
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new RepeatTimesCommand(eAST, cAST, commandPos);
+          break;
+      }
+      break;
+    }
+
+    case Token.FOR: {
+      Identifier iAST = null;
+      Expression e1AST, e2AST, e3AST = null;
+      Command cAST = null;
+      acceptIt();
+      iAST = parseIdentifier();
+      accept(Token.BECOMES);
+      e1AST = parseExpression();
+      accept(Token.DOT);
+      accept(Token.DOT);
+      e2AST = parseExpression();
+      switch (currentToken.kind) {
+        case Token.WHILE:
+          acceptIt();
+          e3AST = parseExpression();
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new ForWhileCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
+          break;
+        
+        case Token.UNTIL:
+          acceptIt();
+          e3AST = parseExpression();
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new ForUntilCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
+          break;
+        
+        default:
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new ForCommand(iAST, e1AST, e2AST, cAST, commandPos);
+          break;
+      }
+      break;
+    }
+
     /*
     case Token.BEGIN:
       acceptIt();
@@ -360,6 +486,36 @@ public class Parser {
     }
 
     return commandAST;
+  }
+
+  Command ifChainParser() throws SyntaxError {
+    Command ifChainAST = null;
+    SourcePosition commandPos = new SourcePosition();
+    start(commandPos);
+
+    switch (currentToken.kind) {
+      case Token.OR:
+        acceptIt();
+        Expression eAST = parseExpression();
+        accept(Token.THEN);
+        Command acceptCommandAST = parseCommand();
+        Command elseCommandAST = ifChainParser();
+        finish(commandPos);
+        ifChainAST = new IfCommand(eAST, acceptCommandAST, elseCommandAST, commandPos);
+        break;
+      
+      case Token.ELSE:
+        acceptIt();
+        ifChainAST = parseCommand();
+        break;
+
+      default:
+          syntacticError("\"%\" cannot be used to continue the if command",
+          currentToken.spelling);
+        break;
+    }
+
+    return ifChainAST;
   }
 
 ///////////////////////////////////////////////////////////////////////////////
