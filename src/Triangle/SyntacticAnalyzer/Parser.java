@@ -494,7 +494,7 @@ public class Parser {
     start(commandPos);
 
     switch (currentToken.kind) {
-      case Token.ELIF:
+      case Token.OR:
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.THEN);

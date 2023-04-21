@@ -92,7 +92,7 @@ final class Token extends Object {
 
     // punctuation...
     DOT			= 26,
-    ELIF    = 27,
+    OR    = 27,
     COLON		= 28,
     SEMICOLON	= 29,
     COMMA		= 30,

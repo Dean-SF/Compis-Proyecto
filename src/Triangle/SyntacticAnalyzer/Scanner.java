@@ -134,7 +134,7 @@ public final class Scanner {
 
     case '|':
       takeIt();
-      return Token.ELIF;
+      return Token.OR;
 
     case ':':
       takeIt();
