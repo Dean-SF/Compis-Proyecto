@@ -37,6 +37,9 @@ import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
@@ -375,6 +378,49 @@ public class Parser {
           accept(Token.END);
           finish(commandPos);
           commandAST = new RepeatTimesCommand(eAST, cAST, commandPos);
+          break;
+      }
+      break;
+    }
+
+    case Token.FOR: {
+      Identifier iAST = null;
+      Expression e1AST, e2AST, e3AST = null;
+      Command cAST = null;
+      acceptIt();
+      iAST = parseIdentifier();
+      accept(Token.BECOMES);
+      e1AST = parseExpression();
+      accept(Token.DOT);
+      accept(Token.DOT);
+      e2AST = parseExpression();
+      switch (currentToken.kind) {
+        case Token.WHILE:
+          acceptIt();
+          e3AST = parseExpression();
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new ForWhileCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
+          break;
+        
+        case Token.UNTIL:
+          acceptIt();
+          e3AST = parseExpression();
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new ForUntilCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
+          break;
+        
+        default:
+          accept(Token.DO);
+          cAST = parseCommand();
+          accept(Token.END);
+          finish(commandPos);
+          commandAST = new ForCommand(iAST, e1AST, e2AST, cAST, commandPos);
           break;
       }
       break;

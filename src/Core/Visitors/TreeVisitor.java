@@ -26,6 +26,9 @@ import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -134,6 +137,18 @@ public class TreeVisitor implements Visitor {
 
     public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
         return(createBinary("Repeat Do Until Command", ast.C, ast.E));
+    }
+
+    public Object visitForCommand(ForCommand ast, Object o) {
+        return(createQuaternary("For Command", ast.I, ast.E1, ast.E2, ast.C));
+    }
+
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+        return(createQuinary("For While Command", ast.I, ast.E1, ast.E2, ast.E3, ast.C));
+    }
+
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+        return(createQuinary("For Until Command", ast.I, ast.E1, ast.E2, ast.E3, ast.C));
     }
 
     // </editor-fold>
@@ -454,6 +469,17 @@ public class TreeVisitor implements Visitor {
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
         t.add((DefaultMutableTreeNode)child4.visit(this, null));
+        
+        return(t);             
+    }
+
+    public DefaultMutableTreeNode createQuinary(String caption, AST child1, AST child2, AST child3, AST child4, AST child5) {
+        DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
+        t.add((DefaultMutableTreeNode)child1.visit(this, null));
+        t.add((DefaultMutableTreeNode)child2.visit(this, null));
+        t.add((DefaultMutableTreeNode)child3.visit(this, null));
+        t.add((DefaultMutableTreeNode)child4.visit(this, null));
+        t.add((DefaultMutableTreeNode)child5.visit(this, null));
         
         return(t);             
     }

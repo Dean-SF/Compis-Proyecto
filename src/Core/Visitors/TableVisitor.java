@@ -26,6 +26,9 @@ import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -76,7 +79,6 @@ import Triangle.CodeGenerator.Field;
 import Triangle.CodeGenerator.KnownAddress;
 import Triangle.CodeGenerator.KnownRoutine;
 import Triangle.CodeGenerator.KnownValue;
-import Triangle.CodeGenerator.TypeRepresentation;
 import Triangle.CodeGenerator.UnknownAddress;
 import Triangle.CodeGenerator.UnknownRoutine;
 import Triangle.CodeGenerator.UnknownValue;
@@ -167,6 +169,33 @@ public class TableVisitor implements Visitor {
     ast.E.visit(this, null);
     return(null);
   }
+
+  public Object visitForCommand(ForCommand ast, Object o) {
+    ast.I.visit(this, null);
+    ast.E1.visit(this, null);
+    ast.E2.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+    ast.I.visit(this, null);
+    ast.E1.visit(this, null);
+    ast.E2.visit(this, null);
+    ast.E3.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+    ast.I.visit(this, null);
+    ast.E1.visit(this, null);
+    ast.E2.visit(this, null);
+    ast.E3.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
 
   // </editor-fold>
 

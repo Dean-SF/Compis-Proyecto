@@ -38,6 +38,9 @@ import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -140,7 +143,18 @@ public class LayoutVisitor implements Visitor {
   public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object obj) {
     return layoutBinary("RepDUCom.", ast.C, ast.E);
   }
+
+  public Object visitForCommand(ForCommand ast, Object obj) {
+    return layoutQuaternary("ForCom.", ast.I, ast.E1, ast.E2, ast.C);
+  }
   
+  public Object visitForWhileCommand(ForWhileCommand ast, Object obj) {
+    return layoutQuinary("ForWCom.", ast.I, ast.E1, ast.E2, ast.E3, ast.C);
+  }
+
+  public Object visitForUntilCommand(ForUntilCommand ast, Object obj) {
+    return layoutQuinary("ForUCom.", ast.I, ast.E1, ast.E2, ast.E3, ast.C);
+  }
 
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object obj) {
@@ -436,6 +450,19 @@ public class LayoutVisitor implements Visitor {
     DrawingTree d3 = (DrawingTree) child3.visit(this, null);
     DrawingTree d4 = (DrawingTree) child4.visit(this, null);
     dt.setChildren(new DrawingTree[] {d1, d2, d3, d4});
+    attachParent(dt, join(dt));
+    return dt;
+  }
+
+  private DrawingTree layoutQuinary (String name, AST child1, AST child2,
+                                        AST child3, AST child4, AST child5) {
+    DrawingTree dt = layoutCaption(name);
+    DrawingTree d1 = (DrawingTree) child1.visit(this, null);
+    DrawingTree d2 = (DrawingTree) child2.visit(this, null);
+    DrawingTree d3 = (DrawingTree) child3.visit(this, null);
+    DrawingTree d4 = (DrawingTree) child4.visit(this, null);
+    DrawingTree d5 = (DrawingTree) child5.visit(this, null);
+    dt.setChildren(new DrawingTree[] {d1, d2, d3, d4, d5});
     attachParent(dt, join(dt));
     return dt;
   }

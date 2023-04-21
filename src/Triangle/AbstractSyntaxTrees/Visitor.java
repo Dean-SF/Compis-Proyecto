@@ -28,6 +28,9 @@ public interface Visitor {
   public abstract Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o);
   public abstract Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o);
   public abstract Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o);
+  public abstract Object visitForCommand(ForCommand ast, Object o);
+  public abstract Object visitForWhileCommand(ForWhileCommand ast, Object o);
+  public abstract Object visitForUntilCommand(ForUntilCommand ast, Object o);
 
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);

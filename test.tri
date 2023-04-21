@@ -1,3 +1,4 @@
-repeat do
-	variable := 5
-until 1>3 end
+for identificador := 1>3 .. 1<3
+until 4>3 do
+	hola := 3
+end
