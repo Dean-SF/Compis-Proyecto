@@ -44,6 +44,8 @@ import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
@@ -71,6 +73,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -154,6 +157,18 @@ public class LayoutVisitor implements Visitor {
 
   public Object visitForUntilCommand(ForUntilCommand ast, Object obj) {
     return layoutQuinary("ForUCom.", ast.I, ast.E1, ast.E2, ast.E3, ast.C);
+  }
+
+  //Proc_Funcs Ericka
+
+  public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object obj) {
+    return layoutTernary("ProcedurePF.", ast.I, ast.FPS, ast.C);
+  }
+  public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object obj) {
+    return layoutQuaternary("FunctionPF.", ast.I, ast.FPS, ast.T, ast.E);
+  }
+  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object obj) {
+    return layoutBinary("SequentialPF.", ast.PF1, ast.PF2);
   }
 
   // Expressions

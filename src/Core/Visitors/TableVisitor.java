@@ -44,6 +44,8 @@ import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
@@ -59,6 +61,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -196,6 +199,27 @@ public class TableVisitor implements Visitor {
     return(null);
   }
 
+//Proc_Funcs Ericka
+  public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
+    ast.I.visit(this, null);
+    ast.FPS.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
+    ast.I.visit(this, null);
+    ast.FPS.visit(this, null);
+    ast.T.visit(this, null);
+    ast.E.visit(this, null);
+    return(null);
+  }
+
+  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+    ast.PF1.visit(this, null);
+    ast.PF2.visit(this, null);
+    return(null);
+  }
 
   // </editor-fold>
 

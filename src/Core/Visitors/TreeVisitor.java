@@ -44,6 +44,8 @@ import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
@@ -59,6 +61,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -149,6 +152,20 @@ public class TreeVisitor implements Visitor {
 
     public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
         return(createQuinary("For Until Command", ast.I, ast.E1, ast.E2, ast.E3, ast.C));
+    }
+
+    //Proc_Funcs Ericka
+    
+    public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
+        return(createTernary("Procedure Proc_Funcs", ast.I, ast.FPS, ast.C));
+    }
+
+    public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
+        return(createQuaternary("Procedure Proc_Funcs", ast.I, ast.FPS, ast.T, ast.E));
+    }
+
+    public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+        return(createBinary("Sequential Proc_Funcs", ast.PF1, ast.PF1));
     }
 
     // </editor-fold>

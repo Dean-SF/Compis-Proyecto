@@ -45,6 +45,7 @@ import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
@@ -61,6 +62,8 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.Proc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
@@ -72,6 +75,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -306,6 +310,20 @@ public class Parser {
       commandAST = new SkipCommand(commandPos);
       break;
     }
+
+    //Ericka "let" Declaration "in" Command "end"
+    case Token.LET:
+      {
+        acceptIt();
+        Declaration dAST = parseDeclaration();
+        accept(Token.IN);
+        Command cAST = parseCommand();
+        accept(Token.END);
+        finish(commandPos);
+        commandAST = new LetCommand(dAST, cAST, commandPos);
+        break;
+      }
+      
     
     case Token.IF: {
       acceptIt();
@@ -795,37 +813,6 @@ public class Parser {
       }
       break;
 
-    case Token.PROC:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.LPAREN);
-        FormalParameterSequence fpsAST = parseFormalParameterSequence();
-        accept(Token.RPAREN);
-        accept(Token.IS);
-        Command cAST = parseSingleCommand();
-        finish(declarationPos);
-        declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
-      }
-      break;
-
-    case Token.FUNC:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.LPAREN);
-        FormalParameterSequence fpsAST = parseFormalParameterSequence();
-        accept(Token.RPAREN);
-        accept(Token.COLON);
-        TypeDenoter tAST = parseTypeDenoter();
-        accept(Token.IS);
-        Expression eAST = parseExpression();
-        finish(declarationPos);
-        declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
-          declarationPos);
-      }
-      break;
-
     case Token.TYPE:
       {
         acceptIt();
@@ -838,8 +825,7 @@ public class Parser {
       break;
 
     default:
-      syntacticError("\"%\" cannot start a declaration",
-        currentToken.spelling);
+      declarationAST = parseProcFunc(); //Ericka
       break;
 
     }
@@ -1049,6 +1035,73 @@ public class Parser {
     }
     return actualAST;
   }
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Proc_Func Ericka
+//
+///////////////////////////////////////////////////////////////////////////////
+
+Proc_Funcs parseProcFuncs() throws SyntaxError{
+  Proc_Funcs pfAST = null; //in case there's a syntactic error
+
+  SourcePosition pfPos = new SourcePosition();
+  
+  start(pfPos);
+  pfAST = parseProcFunc();
+  do{
+    acceptIt();
+    Proc_Funcs pf2AST = parseProcFunc();
+    finish(pfPos);
+    pfAST = new SequentialProcFuncs(pfAST, pf2AST, pfPos);
+  }while(currentToken.kind == Token.OR);
+  return null;
+}
+
+Proc_Funcs parseProcFunc() throws SyntaxError{
+  Proc_Funcs pfAST = null; //in case there's a syntactic error
+  SourcePosition pfPos = new SourcePosition();
+
+  start (pfPos);
+
+  switch (currentToken.kind){
+
+    case Token.PROC:{
+      acceptIt();
+      Identifier iAST = parseIdentifier();
+      accept(Token.LPAREN);
+      FormalParameterSequence fpsAST = parseFormalParameterSequence();
+      accept(Token.RPAREN);
+      accept(Token.IS);
+      Command cAST = parseCommand();
+      accept(Token.END);
+      finish(pfPos);
+      pfAST = new ProcedureProc_Funcs(iAST, fpsAST, cAST, pfPos);
+      break;
+    }
+
+    case Token.FUNC:{
+      acceptIt();
+      Identifier iAST = parseIdentifier();
+      accept(Token.LPAREN);
+      FormalParameterSequence fpsAST = parseFormalParameterSequence();
+      accept(Token.RPAREN);
+      accept(Token.COLON);
+      TypeDenoter tAST = parseTypeDenoter();
+      accept(Token.IS);
+      Expression eAST = parseExpression();
+      finish(pfPos);
+      pfAST = new FunctionProc_Funcs(iAST, fpsAST, tAST, eAST, pfPos);
+      break;
+    }
+
+    default:
+      syntacticError("\"%\" cannot start a Proc Func",
+        currentToken.spelling);
+      break;
+  }
+  return pfAST;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
