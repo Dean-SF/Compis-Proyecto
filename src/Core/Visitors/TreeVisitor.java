@@ -61,6 +61,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -161,6 +162,10 @@ public class TreeVisitor implements Visitor {
 
     public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
         return(createQuaternary("Procedure Proc_Funcs", ast.I, ast.FPS, ast.T, ast.E));
+    }
+
+    public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+        return(createBinary("Sequential Proc_Funcs", ast.PF1, ast.PF1));
     }
 
     // </editor-fold>

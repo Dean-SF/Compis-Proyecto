@@ -58,6 +58,7 @@ public interface Visitor {
   //Proc_Funcs Ericka
   public abstract Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o);
   public abstract Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o);
+  public abstract Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o);
 
 
   // Array Aggregates

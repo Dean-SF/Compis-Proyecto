@@ -1,0 +1,6 @@
+let
+        func sum(x : Integer, y : Integer) : Integer ~
+        x + y
+in
+    skip
+end

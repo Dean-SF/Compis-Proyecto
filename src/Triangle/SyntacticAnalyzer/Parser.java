@@ -75,6 +75,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -812,37 +813,6 @@ public class Parser {
       }
       break;
 
-    case Token.PROC:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.LPAREN);
-        FormalParameterSequence fpsAST = parseFormalParameterSequence();
-        accept(Token.RPAREN);
-        accept(Token.IS);
-        Command cAST = parseSingleCommand();
-        finish(declarationPos);
-        declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
-      }
-      break;
-
-    case Token.FUNC:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.LPAREN);
-        FormalParameterSequence fpsAST = parseFormalParameterSequence();
-        accept(Token.RPAREN);
-        accept(Token.COLON);
-        TypeDenoter tAST = parseTypeDenoter();
-        accept(Token.IS);
-        Expression eAST = parseExpression();
-        finish(declarationPos);
-        declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
-          declarationPos);
-      }
-      break;
-
     case Token.TYPE:
       {
         acceptIt();
@@ -855,8 +825,7 @@ public class Parser {
       break;
 
     default:
-      syntacticError("\"%\" cannot start a declaration",
-        currentToken.spelling);
+      declarationAST = parseProcFunc(); //Ericka
       break;
 
     }
@@ -1073,6 +1042,22 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+Proc_Funcs parseProcFuncs() throws SyntaxError{
+  Proc_Funcs pfAST = null; //in case there's a syntactic error
+
+  SourcePosition pfPos = new SourcePosition();
+  
+  start(pfPos);
+  pfAST = parseProcFunc();
+  do{
+    acceptIt();
+    Proc_Funcs pf2AST = parseProcFunc();
+    finish(pfPos);
+    pfAST = new SequentialProcFuncs(pfAST, pf2AST, pfPos);
+  }while(currentToken.kind == Token.OR);
+  return null;
+}
+
 Proc_Funcs parseProcFunc() throws SyntaxError{
   Proc_Funcs pfAST = null; //in case there's a syntactic error
   SourcePosition pfPos = new SourcePosition();
@@ -1111,7 +1096,7 @@ Proc_Funcs parseProcFunc() throws SyntaxError{
     }
 
     default:
-      syntacticError("\"%\" cannot start a type denoter",
+      syntacticError("\"%\" cannot start a Proc Func",
         currentToken.spelling);
       break;
   }
