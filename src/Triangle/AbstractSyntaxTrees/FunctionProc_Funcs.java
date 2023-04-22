@@ -18,7 +18,7 @@ public class FunctionProc_Funcs extends Proc_Funcs{
   }
 
   public Object visit(Visitor v, Object o) {
-    return v.visitProcedureProc_Funcs(this, o);
+    return v.visitFunctionProc_Funcs(this, o);
   }
 
   public Identifier I;

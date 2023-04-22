@@ -45,6 +45,7 @@ import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
@@ -61,6 +62,8 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.Proc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
@@ -1063,6 +1066,57 @@ public class Parser {
     }
     return actualAST;
   }
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Proc_Func Ericka
+//
+///////////////////////////////////////////////////////////////////////////////
+
+Proc_Funcs parseProcFunc() throws SyntaxError{
+  Proc_Funcs pfAST = null; //in case there's a syntactic error
+  SourcePosition pfPos = new SourcePosition();
+
+  start (pfPos);
+
+  switch (currentToken.kind){
+
+    case Token.PROC:{
+      acceptIt();
+      Identifier iAST = parseIdentifier();
+      accept(Token.LPAREN);
+      FormalParameterSequence fpsAST = parseFormalParameterSequence();
+      accept(Token.RPAREN);
+      accept(Token.IS);
+      Command cAST = parseCommand();
+      accept(Token.END);
+      finish(pfPos);
+      pfAST = new ProcedureProc_Funcs(iAST, fpsAST, cAST, pfPos);
+      break;
+    }
+
+    case Token.FUNC:{
+      acceptIt();
+      Identifier iAST = parseIdentifier();
+      accept(Token.LPAREN);
+      FormalParameterSequence fpsAST = parseFormalParameterSequence();
+      accept(Token.RPAREN);
+      accept(Token.COLON);
+      TypeDenoter tAST = parseTypeDenoter();
+      accept(Token.IS);
+      Expression eAST = parseExpression();
+      finish(pfPos);
+      pfAST = new FunctionProc_Funcs(iAST, fpsAST, tAST, eAST, pfPos);
+      break;
+    }
+
+    default:
+      syntacticError("\"%\" cannot start a type denoter",
+        currentToken.spelling);
+      break;
+  }
+  return pfAST;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
