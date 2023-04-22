@@ -44,6 +44,8 @@ import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
@@ -154,6 +156,15 @@ public class LayoutVisitor implements Visitor {
 
   public Object visitForUntilCommand(ForUntilCommand ast, Object obj) {
     return layoutQuinary("ForUCom.", ast.I, ast.E1, ast.E2, ast.E3, ast.C);
+  }
+
+  //Proc_Funcs Ericka
+
+  public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object obj) {
+    return layoutTernary("ProcedurePF.", ast.I, ast.FPS, ast.C);
+  }
+  public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object obj) {
+    return layoutQuaternary("FunctionPF.", ast.I, ast.FPS, ast.T, ast.E);
   }
 
   // Expressions
