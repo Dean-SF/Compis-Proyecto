@@ -60,10 +60,12 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RecDeclaration;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
@@ -248,6 +250,14 @@ public class LayoutVisitor implements Visitor {
 
   public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
     return layoutBinary("VarDecl.", ast.I, ast.T);
+  }
+
+  public Object visitRecDeclaration(RecDeclaration ast, Object obj) { //Ericka
+    return layoutUnary("RecDecl.", ast.PFs);
+  }
+  
+  public Object visitPrivDeclaration(PrivDeclaration ast, Object obj) { //Ericka
+    return layoutBinary("PrivDecl.", ast.D1, ast.D2);
   }
 
 

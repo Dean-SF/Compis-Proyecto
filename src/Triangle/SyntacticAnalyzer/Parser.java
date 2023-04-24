@@ -14,6 +14,8 @@
 
 package Triangle.SyntacticAnalyzer;
 
+import javax.print.attribute.standard.Finishings;
+
 import Triangle.ErrorReporter;
 import Triangle.AbstractSyntaxTrees.ActualParameter;
 import Triangle.AbstractSyntaxTrees.ActualParameterSequence;
@@ -59,12 +61,14 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Proc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RecDeclaration;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
@@ -767,15 +771,61 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+//Ericka
+
+  Declaration parseCompound_Declaration() throws SyntaxError{
+    Declaration declarationAST = null; // in case there's a syntactic error
+
+    SourcePosition declarationPos = new SourcePosition();
+    start(declarationPos);
+    
+    switch (currentToken.kind){
+
+      case Token.REC:{
+        acceptIt();
+        Proc_Funcs pfsAST = parseProcFuncs();
+        accept(Token.END);
+        finish(declarationPos);
+        declarationAST = new RecDeclaration(pfsAST, declarationPos);
+        break;
+      }
+
+      case Token.PRIVATE:{
+        acceptIt();
+        Declaration dAST = parseDeclaration();
+        accept(Token.IN);
+        Declaration d2AST = parseDeclaration();
+        accept(Token.END);
+        finish(declarationPos);
+        declarationAST = new PrivDeclaration(dAST, d2AST, declarationPos);
+        break;
+      }
+
+      case Token.CONST:
+      case Token.FUNC:
+      case Token.PROC:
+      case Token.TYPE:
+      case Token.VAR:
+        finish(declarationPos);
+        declarationAST = parseSingleDeclaration();
+        break;
+
+      default:
+        syntacticError("\"%\" cannot start a compound declaration", currentToken.spelling);
+      break;
+    }
+    return declarationAST;
+  }
+
   Declaration parseDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST = parseSingleDeclaration();
+    declarationAST = parseCompound_Declaration(); // Cambiando parseSingleDeclaration a parseCompound_Declaration - Ericka
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseSingleDeclaration();
+      Declaration d2AST = parseCompound_Declaration();// Cambiando parseSingleDeclaration a parseCompound_Declaration - Ericka
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST,
         declarationPos);
@@ -1090,6 +1140,7 @@ Proc_Funcs parseProcFunc() throws SyntaxError{
       TypeDenoter tAST = parseTypeDenoter();
       accept(Token.IS);
       Expression eAST = parseExpression();
+      accept(Token.END);
       finish(pfPos);
       pfAST = new FunctionProc_Funcs(iAST, fpsAST, tAST, eAST, pfPos);
       break;

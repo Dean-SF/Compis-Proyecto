@@ -48,10 +48,12 @@ import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RecDeclaration;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
@@ -250,6 +252,15 @@ public class TreeVisitor implements Visitor {
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
         return(createBinary("Variable Declaration", ast.I, ast.T));
     }
+
+    public Object visitRecDeclaration(RecDeclaration ast, Object obj) { //Ericka
+        return(createUnary("Rec Declaration", ast.PFs));
+    }
+
+    public Object visitPrivDeclaration(PrivDeclaration ast, Object obj) { //Ericka
+        return(createBinary("Priv Declaration", ast.D1, ast.D2));
+    }
+
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">

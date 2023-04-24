@@ -54,7 +54,11 @@ public interface Visitor {
   public abstract Object visitTypeDeclaration(TypeDeclaration ast, Object o);
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
+  public abstract Object visitRecDeclaration(RecDeclaration ast, Object o); //Ericka
+  public abstract Object visitPrivDeclaration(PrivDeclaration ast, Object o); //Ericka
 
+  
+  
   //Proc_Funcs Ericka
   public abstract Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o);
   public abstract Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o);
