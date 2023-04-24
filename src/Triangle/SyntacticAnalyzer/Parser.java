@@ -1105,7 +1105,7 @@ Proc_Funcs parseProcFuncs() throws SyntaxError{
     finish(pfPos);
     pfAST = new SequentialProcFuncs(pfAST, pf2AST, pfPos);
   }while(currentToken.kind == Token.OR);
-  return null;
+  return pfAST;
 }
 
 Proc_Funcs parseProcFunc() throws SyntaxError{
