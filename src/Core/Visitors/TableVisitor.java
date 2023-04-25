@@ -601,7 +601,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) { 
-      ast.I.visit(this, null);
+      ast.L.visit(this, null);
       
       return(null);
   }

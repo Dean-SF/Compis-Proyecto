@@ -375,7 +375,7 @@ public class LayoutVisitor implements Visitor {
   }
 
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object obj) {
-    return layoutUnary("Sim.TypeD.", ast.I);
+    return layoutUnary("Sim.TypeD.", ast.L);
   }
 
   public Object visitIntTypeDenoter(IntTypeDenoter ast, Object obj) {

@@ -378,7 +378,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object obj) {
-        return(createUnary("Simple Type Denoter", ast.I));
+        return(createUnary("Simple Type Denoter", ast.L));
     }
     
     public Object visitIntTypeDenoter(IntTypeDenoter ast, Object obj) {

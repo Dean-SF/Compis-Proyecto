@@ -603,7 +603,7 @@ public class WriterXMLVisitor implements Visitor {
 
     public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object obj) {
         writeLineXML("<SimpleTypeDenoter>");
-        ast.I.visit(this, null);
+        ast.L.visit(this, null);
         writeLineXML("</SimpleTypeDenoter>");
         return null;
     }
