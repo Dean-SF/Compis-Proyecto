@@ -1,6 +1,7 @@
 let
         func sum(x : Integer, y : Integer) : Integer ~
         x + y
+end
 in
     skip
 end

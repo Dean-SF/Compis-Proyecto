@@ -48,10 +48,12 @@ import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RecDeclaration;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
@@ -388,6 +390,17 @@ public class TableVisitor implements Visitor {
       
       ast.T.visit(this, null);
       return(null);
+  }
+
+  public Object visitRecDeclaration(RecDeclaration ast, Object o) {  //Ericka
+    ast.PFs.visit(this, null);
+    
+    return(null);
+  }
+  public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {  //Ericka
+    ast.D1.visit(this, null);
+    ast.D2.visit(this, null);
+    return(null);
   }
   
   // </editor-fold>
