@@ -250,7 +250,7 @@ public class WriterXMLVisitor implements Visitor {
 
     public Object visitCallExpression(CallExpression ast, Object obj) {
         writeLineXML("<CallExpression>");
-        ast.I.visit(this, null);
+        ast.LI.visit(this, null);
         ast.APS.visit(this, null);
         writeLineXML("</CallExpression>");
         return null;

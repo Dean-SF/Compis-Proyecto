@@ -679,12 +679,13 @@ public class Parser {
     case Token.IDENTIFIER:
       {
         Identifier iAST= parseIdentifier();
+        LongIdentifier liAST = parseRestOfLongIdentifier(iAST);
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
           accept(Token.RPAREN);
           finish(expressionPos);
-          expressionAST = new CallExpression(iAST, apsAST, expressionPos);
+          expressionAST = new CallExpression(liAST, apsAST, expressionPos);
 
         } else {
           Vname vAST = parseRestOfVname(iAST);

@@ -259,7 +259,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitCallExpression(CallExpression ast, Object o) { 
-      ast.I.visit(this, null);
+      ast.LI.visit(this, null);
       ast.APS.visit(this, null);
       
       return(null);

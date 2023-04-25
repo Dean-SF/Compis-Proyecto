@@ -1,1 +1,5 @@
-MyPackage $ myVar (var Hola)
+if myPackage $ myVar (var myParameterVar) then 
+	skip 
+else 
+	skip
+end
