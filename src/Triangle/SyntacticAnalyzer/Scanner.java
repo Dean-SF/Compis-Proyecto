@@ -132,6 +132,10 @@ public final class Scanner {
       takeIt();
       return Token.DOT;
 
+    case '|':
+      takeIt();
+      return Token.OR;
+
     case ':':
       takeIt();
       if (currentChar == '=') {

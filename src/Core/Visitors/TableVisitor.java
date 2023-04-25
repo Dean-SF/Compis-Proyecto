@@ -22,10 +22,13 @@ import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
+import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -41,6 +44,8 @@ import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
@@ -49,8 +54,14 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatTimesCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -67,12 +78,10 @@ import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.CodeGenerator.Field;
 import Triangle.CodeGenerator.KnownAddress;
 import Triangle.CodeGenerator.KnownRoutine;
 import Triangle.CodeGenerator.KnownValue;
-import Triangle.CodeGenerator.TypeRepresentation;
 import Triangle.CodeGenerator.UnknownAddress;
 import Triangle.CodeGenerator.UnknownRoutine;
 import Triangle.CodeGenerator.UnknownValue;
@@ -84,7 +93,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * Generates a DefaultTableModel, used to draw a Jable.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TableVisitor implements Visitor {
     
@@ -108,7 +117,7 @@ public class TableVisitor implements Visitor {
       return(null);
   }
   
-  public Object visitEmptyCommand(EmptyCommand ast, Object o) { 
+  public Object visitSkipCommand(SkipCommand ast, Object o) { 
       return(null);
   }
   
@@ -133,13 +142,85 @@ public class TableVisitor implements Visitor {
       
       return(null);
   }
-  
-  public Object visitWhileCommand(WhileCommand ast, Object o) { 
-      ast.E.visit(this, null);
-      ast.C.visit(this, null);
-      
-      return(null);
+
+  public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) {
+    ast.E.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
   }
+
+  public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
+    ast.E.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
+    ast.E.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
+    ast.C.visit(this, null);
+    ast.E.visit(this, null);
+    return(null);
+  }
+
+  public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
+    ast.C.visit(this, null);
+    ast.E.visit(this, null);
+    return(null);
+  }
+
+  public Object visitForCommand(ForCommand ast, Object o) {
+    ast.I.visit(this, null);
+    ast.E1.visit(this, null);
+    ast.E2.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+    ast.I.visit(this, null);
+    ast.E1.visit(this, null);
+    ast.E2.visit(this, null);
+    ast.E3.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+    ast.I.visit(this, null);
+    ast.E1.visit(this, null);
+    ast.E2.visit(this, null);
+    ast.E3.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+//Proc_Funcs Ericka
+  public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
+    ast.I.visit(this, null);
+    ast.FPS.visit(this, null);
+    ast.C.visit(this, null);
+    return(null);
+  }
+
+  public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
+    ast.I.visit(this, null);
+    ast.FPS.visit(this, null);
+    ast.T.visit(this, null);
+    ast.E.visit(this, null);
+    return(null);
+  }
+
+  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+    ast.PF1.visit(this, null);
+    ast.PF2.visit(this, null);
+    return(null);
+  }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Expressions ">
@@ -549,8 +630,6 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitOperator(Operator ast, Object o) { 
-      ast.decl.visit(this, null);
-  
       return(null);
   }
   // </editor-fold>

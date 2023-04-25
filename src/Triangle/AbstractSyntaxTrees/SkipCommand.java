@@ -1,5 +1,5 @@
 /*
- * @(#)WhileCommand.java                        2.1 2003/10/07
+ * @(#)EmptyCommand.java                        2.1 2003/10/07
  *
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
@@ -16,18 +16,13 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
-public class WhileCommand extends Command {
+public class SkipCommand extends Command {
 
-  public WhileCommand (Expression eAST, Command cAST, SourcePosition thePosition) {
+  public SkipCommand (SourcePosition thePosition) {
     super (thePosition);
-    E = eAST;
-    C = cAST;
   }
 
   public Object visit(Visitor v, Object o) {
-    return v.visitWhileCommand(this, o);
+    return v.visitSkipCommand(this, o);
   }
-
-  public Expression E;
-  public Command C;
 }

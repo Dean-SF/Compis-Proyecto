@@ -19,12 +19,18 @@ public interface Visitor {
   // Commands
   public abstract Object visitAssignCommand(AssignCommand ast, Object o);
   public abstract Object visitCallCommand(CallCommand ast, Object o);
-  public abstract Object visitEmptyCommand(EmptyCommand ast, Object o);
+  public abstract Object visitSkipCommand(SkipCommand ast, Object o);
   public abstract Object visitIfCommand(IfCommand ast, Object o);
   public abstract Object visitLetCommand(LetCommand ast, Object o);
   public abstract Object visitSequentialCommand(SequentialCommand ast, Object o);
-  public abstract Object visitWhileCommand(WhileCommand ast, Object o);
-
+  public abstract Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o);
+  public abstract Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o);
+  public abstract Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o);
+  public abstract Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o);
+  public abstract Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o);
+  public abstract Object visitForCommand(ForCommand ast, Object o);
+  public abstract Object visitForWhileCommand(ForWhileCommand ast, Object o);
+  public abstract Object visitForUntilCommand(ForUntilCommand ast, Object o);
 
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);
@@ -48,6 +54,12 @@ public interface Visitor {
   public abstract Object visitTypeDeclaration(TypeDeclaration ast, Object o);
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
+
+  //Proc_Funcs Ericka
+  public abstract Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o);
+  public abstract Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o);
+  public abstract Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o);
+
 
   // Array Aggregates
   public abstract Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o);

@@ -387,7 +387,7 @@ public class Disassembler {
     else
       objectName = "obj.tam";
 
-    loadObjectProgram(objectName);
-    disassembleProgram();
+    //loadObjectProgram(objectName);
+    //disassembleProgram();
   }
 }
