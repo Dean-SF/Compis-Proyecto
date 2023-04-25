@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="yes"?>
+<Program>
+<CallCommand>
+<CompoundLongIdentifier>
+<Identifier value="MyPackage"/>
+<Identifier value="myVar"/>
+</CompoundLongIdentifier>
+<SingleActualParameterSequence>
+<VarActualParameter>
+<SimpleVname>
+<Identifier value="Hola"/>
+</SimpleVname>
+</VarActualParameter>
+</SingleActualParameterSequence>
+</CallCommand>
+</Program>

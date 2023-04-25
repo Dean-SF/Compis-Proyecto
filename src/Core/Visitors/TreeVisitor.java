@@ -117,7 +117,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitCallCommand(CallCommand ast, Object o) {
-        return(createBinary("Call Command", ast.I, ast.APS));
+        return(createBinary("Call Command", ast.LI, ast.APS));
     }
     
     public Object visitSkipCommand(SkipCommand ast, Object o) {

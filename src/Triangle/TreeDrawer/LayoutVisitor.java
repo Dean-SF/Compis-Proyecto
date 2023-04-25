@@ -120,7 +120,7 @@ public class LayoutVisitor implements Visitor {
   }
 
   public Object visitCallCommand(CallCommand ast, Object obj) {
-    return layoutBinary("CallCom.", ast.I, ast.APS);
+    return layoutBinary("CallCom.", ast.LI, ast.APS);
    }
 
   public Object visitSkipCommand(SkipCommand ast, Object obj) {

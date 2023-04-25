@@ -43,7 +43,6 @@ import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
-import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
 import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
@@ -62,7 +61,6 @@ import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
-import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Proc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
@@ -261,24 +259,27 @@ public class Parser {
 
   LongIdentifier parseLongIdentifier() throws SyntaxError {
     LongIdentifier liAST = null;
-    SourcePosition commandPos = new SourcePosition();
-    start(commandPos);
-
     Identifier iAST = parseIdentifier();
+    liAST = parseRestOfLongIdentifier(iAST);
+    return liAST;
+  }
 
+  LongIdentifier parseRestOfLongIdentifier(Identifier iAST) throws SyntaxError {
+    SourcePosition commandPos = new SourcePosition();
+    commandPos = iAST.position;
+    
     if(currentToken.kind == Token.DENOTE) {
       acceptIt();;
       Identifier i2AST = parseIdentifier();
       finish(commandPos);
-      liAST = new CompoundLongIdentifier(iAST, i2AST, commandPos);
+      return new CompoundLongIdentifier(iAST, i2AST, commandPos);
       
     } else {
       finish(commandPos);
-      liAST = new SimpleLongIdentifier(iAST, commandPos);
+      return new SimpleLongIdentifier(iAST, commandPos);
     }
-
-    return liAST;
   }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -316,15 +317,15 @@ public class Parser {
     case Token.IDENTIFIER:
       {
         Identifier iAST = parseIdentifier();
+        LongIdentifier liAST = parseRestOfLongIdentifier(iAST);
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
           accept(Token.RPAREN);
           finish(commandPos);
-          commandAST = new CallCommand(iAST, apsAST, commandPos);
+          commandAST = new CallCommand(liAST, apsAST, commandPos);
 
         } else {
-
           Vname vAST = parseRestOfVname(iAST);
           accept(Token.BECOMES);
           Expression eAST = parseExpression();
@@ -462,13 +463,16 @@ public class Parser {
           finish(commandPos);
           commandAST = new ForUntilCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
           break;
-        
-        default:
+        case Token.DO:
           accept(Token.DO);
           cAST = parseCommand();
           accept(Token.END);
           finish(commandPos);
           commandAST = new ForCommand(iAST, e1AST, e2AST, cAST, commandPos);
+          break;
+        default:
+          syntacticError("\"%\" cannot continue a For Command",
+          currentToken.spelling);
           break;
       }
       break;

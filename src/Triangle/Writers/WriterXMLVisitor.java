@@ -115,7 +115,7 @@ public class WriterXMLVisitor implements Visitor {
 
     public Object visitCallCommand(CallCommand ast, Object obj) {
         writeLineXML("<CallCommand>");
-        ast.I.visit(this, null);
+        ast.LI.visit(this, null);
         ast.APS.visit(this, null);
         writeLineXML("</CallCommand>");
         return null;
