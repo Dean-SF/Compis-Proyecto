@@ -1204,7 +1204,6 @@ Proc_Funcs parseProcFunc() throws SyntaxError{
          * finish(typePos);
          * typeAST = new SimpleTypeDenoter(iAST, typePos);
         */
->>>>>>> 903994f6dacd8e08329f9d733bc93419194dfa32
       }
       break;
 
