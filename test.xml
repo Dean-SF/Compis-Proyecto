@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="yes"?>
+<Program>
+<ForUntilCommand>
+<Identifier value="identificador"/>
+<BinaryExpression>
+<IntegerExpression>
+<IntegerLiteral value="1"/>
+</IntegerExpression>
+<Operator value=">"/>
+<IntegerExpression>
+<IntegerLiteral value="3"/>
+</IntegerExpression>
+</BinaryExpression>
+<BinaryExpression>
+<IntegerExpression>
+<IntegerLiteral value="1"/>
+</IntegerExpression>
+<Operator value="&lt;"/>
+<IntegerExpression>
+<IntegerLiteral value="3"/>
+</IntegerExpression>
+</BinaryExpression>
+<BinaryExpression>
+<IntegerExpression>
+<IntegerLiteral value="4"/>
+</IntegerExpression>
+<Operator value=">"/>
+<IntegerExpression>
+<IntegerLiteral value="3"/>
+</IntegerExpression>
+</BinaryExpression>
+<AssignCommand>
+<SimpleVname>
+<Identifier value="hola"/>
+</SimpleVname>
+<IntegerExpression>
+<IntegerLiteral value="3"/>
+</IntegerExpression>
+</AssignCommand>
+</ForUntilCommand>
+</Program>

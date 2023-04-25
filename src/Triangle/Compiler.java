@@ -21,6 +21,7 @@ import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.SyntacticAnalyzer.Scanner;
 import Triangle.SyntacticAnalyzer.SourceFile;
 import Triangle.TreeDrawer.Drawer;
+import Triangle.Writers.WriterHTML;
 
 /**
  * The main driver class for the Triangle compiler.
@@ -32,7 +33,7 @@ public class Compiler {
 
     /** The filename for the object program, normally obj.tam. */
     static String objectName = "obj.tam";
-
+    private static WriterHTML writerHTML;
     private static Scanner scanner;
     private static Parser parser;
     private static Checker checker;
@@ -72,8 +73,8 @@ public class Compiler {
             System.out.println("Can't access source file " + sourceName);
             System.exit(1);
         }
-
-        scanner  = new Scanner(source);
+        writerHTML = new WriterHTML(sourceName);
+        scanner  = new Scanner(source,writerHTML);
         reporter = new ErrorReporter();
         parser   = new Parser(scanner, reporter);
         checker  = new Checker(reporter);
