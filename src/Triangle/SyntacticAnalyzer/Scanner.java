@@ -24,7 +24,6 @@ public final class Scanner {
 
   private char currentChar;
   private StringBuffer currentSpelling;
-  private boolean currentlyScanningToken;
 
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -148,6 +147,10 @@ public final class Scanner {
     case '.':
       takeIt();
       return Token.DOT;
+    
+    case '$':
+      takeIt();
+      return Token.DENOTE;
 
     case '|':
       takeIt();

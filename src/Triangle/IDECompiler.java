@@ -78,11 +78,16 @@ public class IDECompiler {
         try {
 			writerHTML.exportFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error while exporting HTML.");
 		}
         if (success) {
             System.out.println("Compilation was successful.");
-            xmlMaker.writeXML(rootAST);
+            try {
+                xmlMaker.writeXML(rootAST);
+                System.out.println("XML was successful.");
+            } catch (IOException | NullPointerException e) {
+                System.out.println("XML was unsuccessful.");
+            }
         } else
             System.out.println("Compilation was unsuccessful.");
         

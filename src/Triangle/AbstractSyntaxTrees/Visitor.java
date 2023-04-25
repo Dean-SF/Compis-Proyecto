@@ -16,6 +16,10 @@ package Triangle.AbstractSyntaxTrees;
 
 public interface Visitor {
 
+  // Long-Identifier
+  public abstract Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o);
+  public abstract Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o);
+
   // Commands
   public abstract Object visitAssignCommand(AssignCommand ast, Object o);
   public abstract Object visitCallCommand(CallCommand ast, Object o);

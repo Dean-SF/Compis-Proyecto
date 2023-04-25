@@ -12,6 +12,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -54,6 +55,7 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -79,6 +81,22 @@ public class WriterXMLVisitor implements Visitor {
 
     WriterXMLVisitor(FileWriter fileWriter) {
         this.fileWriter = fileWriter;
+    }
+
+    //Long-Identifiers
+    public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object obj) {
+        writeLineXML("<CompoundLongIdentifier>");
+        ast.I1.visit(this, null);
+        ast.I2.visit(this, null);
+        writeLineXML("</CompoundLongIdentifier>");
+        return null;
+    }
+
+    public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object obj) {
+        writeLineXML("<SimpleLongIdentifier>");
+        ast.I.visit(this, null);
+        writeLineXML("</SimpleLongIdentifier>");
+        return null;
     }
 
     // Commands

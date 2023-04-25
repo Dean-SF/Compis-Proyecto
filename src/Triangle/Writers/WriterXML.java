@@ -14,23 +14,17 @@ public class WriterXML {
     }
 
     // Draw the AST representing a complete program.
-    public void writeXML(Program ast) {
+    public void writeXML(Program ast) throws IOException,NullPointerException {
         // Prepare the file to write
-        try {
-            FileWriter fileWriter = new FileWriter(fileName);
+        FileWriter fileWriter = new FileWriter(fileName);
 
-            //XML header
-            fileWriter.write("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
+        //XML header
+        fileWriter.write("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
 
-            WriterXMLVisitor layout = new WriterXMLVisitor(fileWriter);
-            ast.visit(layout, null);
+        WriterXMLVisitor layout = new WriterXMLVisitor(fileWriter);
+        ast.visit(layout, null);
 
-            fileWriter.close();
-
-        } catch (IOException e) {
-            System.err.println("Error while creating file for print the AST");
-            e.printStackTrace();
-        }
+        fileWriter.close();
     }
 
 }
