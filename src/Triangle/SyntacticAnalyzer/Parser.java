@@ -33,15 +33,19 @@
  import Triangle.AbstractSyntaxTrees.Declaration;
  import Triangle.AbstractSyntaxTrees.DotVname;
  import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
- import Triangle.AbstractSyntaxTrees.EmptyCommand;
+ import Triangle.AbstractSyntaxTrees.SkipCommand;
  import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
  import Triangle.AbstractSyntaxTrees.Expression;
  import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
+ import Triangle.AbstractSyntaxTrees.ForCommand;
+ import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+ import Triangle.AbstractSyntaxTrees.ForWhileCommand;
  import Triangle.AbstractSyntaxTrees.FormalParameter;
  import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
  import Triangle.AbstractSyntaxTrees.FuncActualParameter;
  import Triangle.AbstractSyntaxTrees.FuncDeclaration;
  import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+ import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
  import Triangle.AbstractSyntaxTrees.Identifier;
  import Triangle.AbstractSyntaxTrees.IfCommand;
  import Triangle.AbstractSyntaxTrees.IfExpression;
@@ -55,15 +59,26 @@
  import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
  import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
  import Triangle.AbstractSyntaxTrees.Operator;
+ import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+ import Triangle.AbstractSyntaxTrees.ProgramPackage;
+ import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcActualParameter;
  import Triangle.AbstractSyntaxTrees.ProcDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+ import Triangle.AbstractSyntaxTrees.Proc_Funcs;
+ import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
  import Triangle.AbstractSyntaxTrees.Program;
  import Triangle.AbstractSyntaxTrees.RecordAggregate;
  import Triangle.AbstractSyntaxTrees.RecordExpression;
  import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+ import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
+ import Triangle.AbstractSyntaxTrees.RepeatDoWhileCommand;
+ import Triangle.AbstractSyntaxTrees.RepeatTimesCommand;
+ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
+ import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
  import Triangle.AbstractSyntaxTrees.SequentialCommand;
  import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+ import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
  import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
  import Triangle.AbstractSyntaxTrees.SimpleVname;
  import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -80,7 +95,6 @@
  import Triangle.AbstractSyntaxTrees.VarFormalParameter;
  import Triangle.AbstractSyntaxTrees.Vname;
  import Triangle.AbstractSyntaxTrees.VnameExpression;
- import Triangle.AbstractSyntaxTrees.WhileCommand;
  
  public class Parser {
  
@@ -141,7 +155,8 @@
  //
  ///////////////////////////////////////////////////////////////////////////////
  
-   public Program parseProgram() {
+ /*   PROGRAM VIEJO
+  public Program parseProgram() {
  
      Program programAST = null;
  
@@ -160,6 +175,53 @@
      catch (SyntaxError s) { return null; }
      return programAST;
    }
+
+  */
+  
+  // Program modificado por Andrea
+  public Program parseProgram() {
+    Program programAST = null;
+
+    previousTokenPosition.start = 0;
+    previousTokenPosition.finish = 0;
+    currentToken = lexicalAnalyser.scan();
+    
+    try {
+    // Caso 1: Hay 1 o mas package declarations
+    if (currentToken.kind == Token.PACKAGE) {
+      Declaration dAST1 = parsePackageDeclaration();
+
+      // Caso 1.a: Solo hay 1 Package Declaration
+      if (currentToken.kind != Token.PACKAGE) {
+        Command cAST = parseCommand();
+        acceptIt();
+        finish(previousTokenPosition);
+        programAST = new ProgramPackage(dAST1, cAST, previousTokenPosition);
+      
+      // Caso 1.b: Hay 2 o mas Package Declarations 
+      } else {  
+        Declaration seqPckAST = null;
+
+        while (currentToken.kind == Token.PACKAGE) {
+          seqPckAST = parseSequentialPackageDeclaration();
+        }
+        Command cAST = parseCommand();
+        finish(previousTokenPosition);
+        programAST = new ProgramPackage(seqPckAST, cAST, previousTokenPosition);
+      }
+
+    // Caso 2: Solo hay un Command  
+    } else {  
+      Command cAST = parseCommand();
+      finish(previousTokenPosition);
+      programAST = new Program(cAST, previousTokenPosition);
+    }
+
+    } catch (SyntaxError s) { return null; }
+    return programAST;
+  }
+
+
  
  ///////////////////////////////////////////////////////////////////////////////
  //
@@ -292,7 +354,148 @@
          }
        }
        break;
+     
+     case Token.SKIP: {
+       acceptIt();
+       finish(commandPos);
+       commandAST = new SkipCommand(commandPos);
+       break;
+     }
  
+     //Ericka "let" Declaration "in" Command "end"
+     case Token.LET:
+       {
+         acceptIt();
+         Declaration dAST = parseDeclaration();
+         accept(Token.IN);
+         Command cAST = parseCommand();
+         accept(Token.END);
+         finish(commandPos);
+         commandAST = new LetCommand(dAST, cAST, commandPos);
+         break;
+       }
+       
+     
+     case Token.IF: {
+       acceptIt();
+       Expression eAST = parseExpression();
+       accept(Token.THEN);
+       Command acceptCommandAST = parseCommand();
+       Command elseCommandAST = ifChainParser();
+       accept(Token.END);
+       finish(commandPos);
+       commandAST = new IfCommand(eAST, acceptCommandAST, elseCommandAST, commandPos);
+       break;
+     }
+ 
+     case Token.REPEAT: {
+       Expression eAST = null;
+       Command cAST = null;
+       acceptIt();
+       switch (currentToken.kind) {
+         case Token.WHILE:
+           acceptIt();
+           eAST = parseExpression();
+           accept(Token.DO);
+           cAST = parseCommand();
+           accept(Token.END);
+           finish(commandPos);
+           commandAST = new RepeatWhileCommand(eAST, cAST, commandPos);
+           break;
+         case Token.UNTIL:
+           acceptIt();
+           eAST = parseExpression();
+           accept(Token.DO);
+           cAST = parseCommand();
+           accept(Token.END);
+           finish(commandPos);
+           commandAST = new RepeatUntilCommand(eAST, cAST, commandPos);
+           break;
+         case Token.DO:
+           acceptIt();
+           cAST = parseCommand();
+           switch (currentToken.kind) {
+             case Token.WHILE:
+               acceptIt();
+               eAST = parseExpression();
+               accept(Token.END);
+               finish(commandPos);
+               commandAST = new RepeatDoWhileCommand(eAST, cAST, commandPos);
+               break;
+             
+             case Token.UNTIL:
+               acceptIt();
+               eAST = parseExpression();
+               accept(Token.END);
+               finish(commandPos);
+               commandAST = new RepeatDoUntilCommand(eAST, cAST, commandPos);
+               break;
+           
+             default:
+               syntacticError("\"%\" cannot continue a Repeat Do command",
+               currentToken.spelling);
+               break;
+           }
+ 
+           break;
+         
+         default:
+           eAST = parseExpression();
+           accept(Token.TIMES);
+           accept(Token.DO);
+           cAST = parseCommand();
+           accept(Token.END);
+           finish(commandPos);
+           commandAST = new RepeatTimesCommand(eAST, cAST, commandPos);
+           break;
+       }
+       break;
+     }
+ 
+     case Token.FOR: {
+       Identifier iAST = null;
+       Expression e1AST, e2AST, e3AST = null;
+       Command cAST = null;
+       acceptIt();
+       iAST = parseIdentifier();
+       accept(Token.BECOMES);
+       e1AST = parseExpression();
+       accept(Token.DOT);
+       accept(Token.DOT);
+       e2AST = parseExpression();
+       switch (currentToken.kind) {
+         case Token.WHILE:
+           acceptIt();
+           e3AST = parseExpression();
+           accept(Token.DO);
+           cAST = parseCommand();
+           accept(Token.END);
+           finish(commandPos);
+           commandAST = new ForWhileCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
+           break;
+         
+         case Token.UNTIL:
+           acceptIt();
+           e3AST = parseExpression();
+           accept(Token.DO);
+           cAST = parseCommand();
+           accept(Token.END);
+           finish(commandPos);
+           commandAST = new ForUntilCommand(iAST, e1AST, e2AST, e3AST, cAST, commandPos);
+           break;
+         
+         default:
+           accept(Token.DO);
+           cAST = parseCommand();
+           accept(Token.END);
+           finish(commandPos);
+           commandAST = new ForCommand(iAST, e1AST, e2AST, cAST, commandPos);
+           break;
+       }
+       break;
+     }
+ 
+     /*
      case Token.BEGIN:
        acceptIt();
        commandAST = parseCommand();
@@ -304,7 +507,7 @@
          acceptIt();
          Declaration dAST = parseDeclaration();
          accept(Token.IN);
-         Command cAST = parseCommand();
+         Command cAST = parseSingleCommand();
          finish(commandPos);
          commandAST = new LetCommand(dAST, cAST, commandPos);
        }
@@ -334,12 +537,15 @@
        }
        break;
  
-     case Token.SKIP:
-       {
-         finish(commandPos);
-         commandAST = new EmptyCommand(commandPos);
-       }
-       break;
+     case Token.SEMICOLON:
+     case Token.END:
+     case Token.ELSE:
+     case Token.IN:
+     case Token.EOT:
+ 
+       finish(commandPos);
+       commandAST = new EmptyCommand(commandPos);
+       break;*/
  
      default:
        syntacticError("\"%\" cannot start a command",
@@ -349,6 +555,36 @@
      }
  
      return commandAST;
+   }
+ 
+   Command ifChainParser() throws SyntaxError {
+     Command ifChainAST = null;
+     SourcePosition commandPos = new SourcePosition();
+     start(commandPos);
+ 
+     switch (currentToken.kind) {
+       case Token.OR:
+         acceptIt();
+         Expression eAST = parseExpression();
+         accept(Token.THEN);
+         Command acceptCommandAST = parseCommand();
+         Command elseCommandAST = ifChainParser();
+         finish(commandPos);
+         ifChainAST = new IfCommand(eAST, acceptCommandAST, elseCommandAST, commandPos);
+         break;
+       
+       case Token.ELSE:
+         acceptIt();
+         ifChainAST = parseCommand();
+         break;
+ 
+       default:
+           syntacticError("\"%\" cannot be used to continue the if command",
+           currentToken.spelling);
+         break;
+     }
+ 
+     return ifChainAST;
    }
  
  ///////////////////////////////////////////////////////////////////////////////
@@ -628,37 +864,6 @@
        }
        break;
  
-     case Token.PROC:
-       {
-         acceptIt();
-         Identifier iAST = parseIdentifier();
-         accept(Token.LPAREN);
-         FormalParameterSequence fpsAST = parseFormalParameterSequence();
-         accept(Token.RPAREN);
-         accept(Token.IS);
-         Command cAST = parseSingleCommand();
-         finish(declarationPos);
-         declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
-       }
-       break;
- 
-     case Token.FUNC:
-       {
-         acceptIt();
-         Identifier iAST = parseIdentifier();
-         accept(Token.LPAREN);
-         FormalParameterSequence fpsAST = parseFormalParameterSequence();
-         accept(Token.RPAREN);
-         accept(Token.COLON);
-         TypeDenoter tAST = parseTypeDenoter();
-         accept(Token.IS);
-         Expression eAST = parseExpression();
-         finish(declarationPos);
-         declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
-           declarationPos);
-       }
-       break;
- 
      case Token.TYPE:
        {
          acceptIt();
@@ -671,14 +876,64 @@
        break;
  
      default:
-       syntacticError("\"%\" cannot start a declaration",
-         currentToken.spelling);
+       declarationAST = parseProcFunc(); //Ericka
        break;
  
      }
      return declarationAST;
    }
+
+   /*
+   * Andrea
+   */
+  PackageDeclaration parsePackageDeclaration() throws SyntaxError {
+    PackageDeclaration packDeclarationAST = null; // in case there's a syntactic error
+
+    SourcePosition packDeclarationPos = new SourcePosition();
+    start(packDeclarationPos);
+
+    if (currentToken.kind == Token.PACKAGE) {
+      acceptIt();
+      Identifier iAST = parseIdentifier();
+      accept(Token.IS);
+      Declaration dAST = parseDeclaration();
+      accept(Token.END);
+      finish(packDeclarationPos);
+      packDeclarationAST = new PackageDeclaration(iAST, dAST, packDeclarationPos);
+    
+    } else {
+      syntacticError("\"%\" cannot start a Package Declaration",
+        currentToken.spelling);
+    }
+    
+    return packDeclarationAST;
+  }
+
+  /*
+   * Andrea
+   */
+  SequentialPackageDeclaration parseSequentialPackageDeclaration() throws SyntaxError {
+    SequentialPackageDeclaration seqPackDeclarationAST = null; // in case there's a syntactic error
+
+    SourcePosition seqPackDeclarationPos = new SourcePosition();
+    start(seqPackDeclarationPos);
+
+    if (currentToken.kind == Token.PACKAGE) {
+      acceptIt();
+      Declaration dAST1 = parseDeclaration();
+      Declaration dAST2 = parseDeclaration();
+      finish(seqPackDeclarationPos);
+      seqPackDeclarationAST = new SequentialPackageDeclaration(dAST1, dAST2, seqPackDeclarationPos);
+    
+    } else {
+      syntacticError("\"%\" cannot start a Sequential Package Declaration",
+        currentToken.spelling);
+    }
+    
+    return seqPackDeclarationAST;
+  }
  
+
  ///////////////////////////////////////////////////////////////////////////////
  //
  // PARAMETERS
@@ -882,6 +1137,73 @@
      }
      return actualAST;
    }
+ 
+ ///////////////////////////////////////////////////////////////////////////////
+ //
+ // Proc_Func Ericka
+ //
+ ///////////////////////////////////////////////////////////////////////////////
+ 
+ Proc_Funcs parseProcFuncs() throws SyntaxError{
+   Proc_Funcs pfAST = null; //in case there's a syntactic error
+ 
+   SourcePosition pfPos = new SourcePosition();
+   
+   start(pfPos);
+   pfAST = parseProcFunc();
+   do{
+     acceptIt();
+     Proc_Funcs pf2AST = parseProcFunc();
+     finish(pfPos);
+     pfAST = new SequentialProcFuncs(pfAST, pf2AST, pfPos);
+   }while(currentToken.kind == Token.OR);
+   return null;
+ }
+ 
+ Proc_Funcs parseProcFunc() throws SyntaxError{
+   Proc_Funcs pfAST = null; //in case there's a syntactic error
+   SourcePosition pfPos = new SourcePosition();
+ 
+   start (pfPos);
+ 
+   switch (currentToken.kind){
+ 
+     case Token.PROC:{
+       acceptIt();
+       Identifier iAST = parseIdentifier();
+       accept(Token.LPAREN);
+       FormalParameterSequence fpsAST = parseFormalParameterSequence();
+       accept(Token.RPAREN);
+       accept(Token.IS);
+       Command cAST = parseCommand();
+       accept(Token.END);
+       finish(pfPos);
+       pfAST = new ProcedureProc_Funcs(iAST, fpsAST, cAST, pfPos);
+       break;
+     }
+ 
+     case Token.FUNC:{
+       acceptIt();
+       Identifier iAST = parseIdentifier();
+       accept(Token.LPAREN);
+       FormalParameterSequence fpsAST = parseFormalParameterSequence();
+       accept(Token.RPAREN);
+       accept(Token.COLON);
+       TypeDenoter tAST = parseTypeDenoter();
+       accept(Token.IS);
+       Expression eAST = parseExpression();
+       finish(pfPos);
+       pfAST = new FunctionProc_Funcs(iAST, fpsAST, tAST, eAST, pfPos);
+       break;
+     }
+ 
+     default:
+       syntacticError("\"%\" cannot start a Proc Func",
+         currentToken.spelling);
+       break;
+   }
+   return pfAST;
+ }
  
  ///////////////////////////////////////////////////////////////////////////////
  //

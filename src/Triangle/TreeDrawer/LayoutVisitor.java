@@ -60,6 +60,9 @@
  import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
  import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
  import Triangle.AbstractSyntaxTrees.Operator;
+ import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+ import Triangle.AbstractSyntaxTrees.ProgramPackage;
+ import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcActualParameter;
  import Triangle.AbstractSyntaxTrees.ProcDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -249,7 +252,16 @@
    public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
      return layoutBinary("VarDecl.", ast.I, ast.T);
    }
- 
+
+   // Package Declaration Andrea
+  public Object visitPackageDeclaration(PackageDeclaration ast, Object obj) {
+    return layoutBinary("PackDecl.", ast.I, ast.D);
+  }
+  
+  // Sequential Package Declaration Andrea
+  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object obj) {
+    return layoutBinary("SeqPackDecl.", ast.D1, ast.D2);
+  }
  
    // Array Aggregates
    public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object obj) {
@@ -413,6 +425,13 @@
    public Object visitProgram(Program ast, Object obj) {
      return layoutUnary("Program", ast.C);
    }
+
+   /*
+    * Andrea
+    */
+   public Object visitProgramPackage(ProgramPackage ast, Object obj) {
+    return layoutBinary("PackDecl.", ast.D, ast.C);
+  }
  
    private DrawingTree layoutCaption (String name) {
      int w = fontMetrics.stringWidth(name) + 4;

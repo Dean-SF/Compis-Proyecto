@@ -54,6 +54,10 @@ public interface Visitor {
   public abstract Object visitTypeDeclaration(TypeDeclaration ast, Object o);
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
+  // Package Declaration Andrea
+  public abstract Object visitPackageDeclaration(PackageDeclaration ast, Object o);
+  // Sequential Package Declaration Andrea
+  public abstract Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o);
 
   //Proc_Funcs Ericka
   public abstract Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o);
@@ -115,5 +119,5 @@ public interface Visitor {
 
   // Programs
   public abstract Object visitProgram(Program ast, Object o);
-
+  public abstract Object visitProgramPackage(ProgramPackage ast, Object o);
 }

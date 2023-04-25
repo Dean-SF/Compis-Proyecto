@@ -48,6 +48,9 @@ import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+import Triangle.AbstractSyntaxTrees.ProgramPackage;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -250,6 +253,21 @@ public class TreeVisitor implements Visitor {
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
         return(createBinary("Variable Declaration", ast.I, ast.T));
     }
+
+    /*
+        Package Declaration (Andrea)
+     */ 
+    public Object visitPackageDeclaration(PackageDeclaration ast, Object obj) {
+        return(createBinary("Package Declaration", ast.I, ast.D));
+    }
+
+    /*
+     * Sequential Package Declaration
+     */
+    public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object obj) {
+        return(createBinary("Sequential Package Delcaration", ast.D1, ast.D2));
+    }
+
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
@@ -411,6 +429,12 @@ public class TreeVisitor implements Visitor {
     public Object visitProgram(Program ast, Object obj) {
         return(createUnary("Program", ast.C));
     }
+
+    // Andrea
+    public Object visitProgramPackage(ProgramPackage ast, Object obj) {
+        return(createBinary("Program Package", ast.D, ast.C));
+    }
+
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc=" Tree Creation Methods ">

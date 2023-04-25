@@ -48,6 +48,9 @@ import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+import Triangle.AbstractSyntaxTrees.ProgramPackage;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -389,7 +392,27 @@ public class TableVisitor implements Visitor {
       ast.T.visit(this, null);
       return(null);
   }
-  
+
+  /*
+   * Visit program declaration Andrea
+   */
+  public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {   
+    ast.I.visit(this, null);
+    ast.D.visit(this, null);
+    
+    return(null);
+  }
+
+  /*
+   * Visit Sequential package declaration Andrea
+   */
+  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) { 
+    ast.D1.visit(this, null); 
+    ast.D2.visit(this, null);
+    
+    return(null);   
+    }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
@@ -664,6 +687,16 @@ public class TableVisitor implements Visitor {
       
       return(null);
   }
+
+  /*
+   * Andrea
+   */
+  public Object visitProgramPackage(ProgramPackage ast, Object o) { 
+    ast.D.visit(this, null); 
+    ast.C.visit(this, null);
+    
+    return(null);
+}
   
     /**
      * Adds an identifier to the table.
