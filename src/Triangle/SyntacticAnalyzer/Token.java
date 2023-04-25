@@ -94,24 +94,25 @@ final class Token extends Object {
 
     // punctuation...
     DOT			= 28,
-    OR    = 29,
-    COLON		= 30,
-    SEMICOLON	= 31,
-    COMMA		= 32,
-    BECOMES	= 33,
-    IS			= 34,
+    DENOTE  = 29,
+    OR      = 30,
+    COLON		= 31,
+    SEMICOLON	= 32,
+    COMMA		= 33,
+    BECOMES	= 34,
+    IS			= 35,
 
     // brackets...
-    LPAREN		= 35,
-    RPAREN		= 36,
-    LBRACKET	= 37,
-    RBRACKET	= 38,
-    LCURLY		= 39,
-    RCURLY		= 40,
+    LPAREN		= 36,
+    RPAREN		= 37,
+    LBRACKET	= 38,
+    RBRACKET	= 39,
+    LCURLY		= 40,
+    RCURLY		= 41,
 
     // special tokens...
-    EOT			= 41,
-    ERROR		= 42;
+    EOT			= 42,
+    ERROR		= 43;
 
   private static String[] tokenTable = new String[] {
     "<int>",
@@ -143,6 +144,7 @@ final class Token extends Object {
     "var",
     "while",
     ".",
+    "$",
     "|",
     ":",
     ";",

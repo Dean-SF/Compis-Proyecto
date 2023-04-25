@@ -17,6 +17,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -64,6 +65,7 @@ import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -102,6 +104,21 @@ public class TableVisitor implements Visitor {
     /** Creates a new instance of TableDetails */
     public TableVisitor() {        
     }
+
+  // </editor-fold>
+
+  // <editor-fold defaultstate="collapsed" desc=" Long-Identifier ">
+  // Long-Identifier
+  public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) { 
+      ast.I1.visit(this, null);
+      ast.I2.visit(this, null);
+      return(null);
+  }
+
+  public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) { 
+    ast.I.visit(this, null);
+    return(null);
+  }
 
   // <editor-fold defaultstate="collapsed" desc=" Commands ">
   // Commands

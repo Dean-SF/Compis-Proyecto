@@ -7,7 +7,11 @@ package Triangle;
 
 import Triangle.CodeGenerator.Frame;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import Triangle.SyntacticAnalyzer.SourceFile;
+import Triangle.Writers.WriterHTML;
+import Triangle.Writers.WriterXML;
 import Triangle.SyntacticAnalyzer.Scanner;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
@@ -45,8 +49,10 @@ public class IDECompiler {
                            " **********");
         
         System.out.println("Syntactic Analysis ...");
+        WriterHTML writerHTML = new WriterHTML(sourceName);
+        WriterXML xmlMaker = new WriterXML(sourceName);
         SourceFile source = new SourceFile(sourceName);
-        Scanner scanner = new Scanner(source);
+        Scanner scanner = new Scanner(source,writerHTML);
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
@@ -69,10 +75,20 @@ public class IDECompiler {
                 }
             }
         }*/
-
-        if (success)
+        try {
+			writerHTML.exportFile();
+		} catch (IOException e) {
+			System.out.println("Error while exporting HTML.");
+		}
+        if (success) {
             System.out.println("Compilation was successful.");
-        else
+            try {
+                xmlMaker.writeXML(rootAST);
+                System.out.println("XML was successful.");
+            } catch (IOException | NullPointerException e) {
+                System.out.println("XML was unsuccessful.");
+            }
+        } else
             System.out.println("Compilation was unsuccessful.");
         
         return(success);

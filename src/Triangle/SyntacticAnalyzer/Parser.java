@@ -13,9 +13,6 @@
  */
 
 package Triangle.SyntacticAnalyzer;
-
-import javax.print.attribute.standard.Finishings;
-
 import Triangle.ErrorReporter;
 import Triangle.AbstractSyntaxTrees.ActualParameter;
 import Triangle.AbstractSyntaxTrees.ActualParameterSequence;
@@ -29,6 +26,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.Command;
+import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -55,6 +53,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LongIdentifier;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -80,6 +79,7 @@ import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -163,7 +163,6 @@ public class Parser {
     previousTokenPosition.start = 0;
     previousTokenPosition.finish = 0;
     currentToken = lexicalAnalyser.scan();
-
     try {
       Command cAST = parseCommand();
       programAST = new Program(cAST, previousTokenPosition);
@@ -252,6 +251,33 @@ public class Parser {
       syntacticError("operator expected here", "");
     }
     return O;
+  }
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// LONG-IDENTIFIER
+//
+///////////////////////////////////////////////////////////////////////////////
+
+  LongIdentifier parseLongIdentifier() throws SyntaxError {
+    LongIdentifier liAST = null;
+    SourcePosition commandPos = new SourcePosition();
+    start(commandPos);
+
+    Identifier iAST = parseIdentifier();
+
+    if(currentToken.kind == Token.DENOTE) {
+      acceptIt();;
+      Identifier i2AST = parseIdentifier();
+      finish(commandPos);
+      liAST = new CompoundLongIdentifier(iAST, i2AST, commandPos);
+      
+    } else {
+      finish(commandPos);
+      liAST = new SimpleLongIdentifier(iAST, commandPos);
+    }
+
+    return liAST;
   }
 
 ///////////////////////////////////////////////////////////////////////////////
