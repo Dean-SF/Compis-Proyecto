@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<Program>
+<IfCommand>
+<CallExpression>
+<CompoundLongIdentifier>
+<Identifier value="myPackage"/>
+<Identifier value="myVar"/>
+</CompoundLongIdentifier>
+<SingleActualParameterSequence>
+<VarActualParameter>
+<SimpleVname>
+<Identifier value="myParameterVar"/>
+</SimpleVname>
+</VarActualParameter>
+</SingleActualParameterSequence>
+</CallExpression>
+<SkipCommand/>
+<SkipCommand/>
+</IfCommand>
+</Program>
