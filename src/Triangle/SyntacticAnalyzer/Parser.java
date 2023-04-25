@@ -1196,9 +1196,13 @@ Proc_Funcs parseProcFunc() throws SyntaxError{
 
     case Token.IDENTIFIER:
       {
+        LongIdentifier lAST = parseLongIdentifier();
+        finish(typePos);
+        typeAST = new SimpleTypeDenoter(lAST, typePos);
+        /* Ericka
         Identifier iAST = parseIdentifier();
         finish(typePos);
-        typeAST = new SimpleTypeDenoter(iAST, typePos);
+        typeAST = new SimpleTypeDenoter(iAST, typePos);*/
       }
       break;
 
