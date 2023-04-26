@@ -49,6 +49,7 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
+import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PrivDeclaration;
@@ -455,6 +456,15 @@ public class TreeVisitor implements Visitor {
     
     public Object visitCompoundVname(CompoundVname ast, Object obj) {
         return(createBinary("Compound Vname", ast.I, ast.VAR));
+    }
+    
+    //programs
+    public Object visitProgram(Program ast, Object obj) {
+        if(ast instanceof SimpleProgram) {
+            return visitSimpleProgram((SimpleProgram)ast, obj);
+        } else {
+            return visitCompoundProgram((CompoundProgram)ast, obj);
+        }
     }
     
     public Object visitSimpleProgram(SimpleProgram ast, Object obj) {
