@@ -295,18 +295,18 @@ public Package parsePackage() throws SyntaxError{
   }
 
   LongIdentifier parseRestOfLongIdentifier(Identifier iAST) throws SyntaxError {
-    SourcePosition commandPos = new SourcePosition();
-    commandPos = iAST.position;
+    SourcePosition longIdentifierPos = new SourcePosition();
+    longIdentifierPos = iAST.position;
     
     if(currentToken.kind == Token.DENOTE) {
       acceptIt();;
       Identifier i2AST = parseIdentifier();
-      finish(commandPos);
-      return new CompoundLongIdentifier(iAST, i2AST, commandPos);
+      finish(longIdentifierPos);
+      return new CompoundLongIdentifier(iAST, i2AST, longIdentifierPos);
       
     } else {
-      finish(commandPos);
-      return new SimpleLongIdentifier(iAST, commandPos);
+      finish(longIdentifierPos);
+      return new SimpleLongIdentifier(iAST, longIdentifierPos);
     }
   }
 
@@ -813,24 +813,6 @@ public Package parsePackage() throws SyntaxError{
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-  /*
-  Vname parseSpecialVnameCase (Identifier i1AST, Identifier i2AST, boolean simple) throws SyntaxError  {
-    Vname vAST = null;
-    
-    SourcePosition vnamePos1 = new SourcePosition();
-    vnamePos1 = i1AST.position;
-
-    Varname varAST = parseRestOfVarName(i2AST);
-
-    finish(vnamePos1);
-    if(simple) {
-      vAST = new SimpleVname(varAST, vnamePos1);
-    } else {
-      vAST = new CompoundVname(i1AST, varAST, vnamePos1);
-    }
-    return vAST;
-  }*/
-
   Vname parseSpecialVnameCase (LongIdentifier liAST) throws SyntaxError  {
     Vname vAST = null;
     SourcePosition vnamePos = new SourcePosition();
@@ -859,19 +841,19 @@ public Package parsePackage() throws SyntaxError{
   }
 
   Vname parseRestOfVname(Identifier iAST) throws SyntaxError {
-    SourcePosition commandPos = new SourcePosition();
-    commandPos = iAST.position;
+    SourcePosition vnamePos = new SourcePosition();
+    vnamePos = iAST.position;
     
     if(currentToken.kind == Token.DENOTE) {
       acceptIt();;
       Varname varAST = parseVarName();
-      finish(commandPos);
-      return new CompoundVname(iAST, varAST, commandPos);
+      finish(vnamePos);
+      return new CompoundVname(iAST, varAST, vnamePos);
       
     } else {
       Varname varAST = parseRestOfVarName(iAST);
-      finish(commandPos);
-      return new SimpleVname(varAST, commandPos);
+      finish(vnamePos);
+      return new SimpleVname(varAST, vnamePos);
     }
   }
 
