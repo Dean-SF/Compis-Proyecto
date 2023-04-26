@@ -29,7 +29,8 @@
  import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
  import Triangle.AbstractSyntaxTrees.CharacterExpression;
  import Triangle.AbstractSyntaxTrees.CharacterLiteral;
- import Triangle.AbstractSyntaxTrees.ConstActualParameter;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
+import Triangle.AbstractSyntaxTrees.ConstActualParameter;
  import Triangle.AbstractSyntaxTrees.ConstDeclaration;
  import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
  import Triangle.AbstractSyntaxTrees.DotVname;
@@ -61,12 +62,10 @@
  import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
  import Triangle.AbstractSyntaxTrees.Operator;
  import Triangle.AbstractSyntaxTrees.PackageDeclaration;
- import Triangle.AbstractSyntaxTrees.ProgramPackage;
  import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcActualParameter;
  import Triangle.AbstractSyntaxTrees.ProcDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
- import Triangle.AbstractSyntaxTrees.Program;
  import Triangle.AbstractSyntaxTrees.RecordExpression;
  import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
  import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
@@ -77,7 +76,8 @@
  import Triangle.AbstractSyntaxTrees.SequentialCommand;
  import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
  import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
- import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
+import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
  import Triangle.AbstractSyntaxTrees.SimpleVname;
  import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
  import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
@@ -260,7 +260,7 @@
   
   // Sequential Package Declaration Andrea
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object obj) {
-    return layoutBinary("SeqPackDecl.", ast.D1, ast.D2);
+    return layoutBinary("SeqPackDecl.", ast.P1, ast.P2);
   }
  
    // Array Aggregates
@@ -422,15 +422,15 @@
  
  
    // Programs
-   public Object visitProgram(Program ast, Object obj) {
-     return layoutUnary("Program", ast.C);
+   public Object visitSimpleProgram(SimpleProgram ast, Object obj) {
+     return layoutUnary("Simp.Program", ast.C);
    }
 
    /*
     * Andrea
     */
-   public Object visitProgramPackage(ProgramPackage ast, Object obj) {
-    return layoutBinary("PackDecl.", ast.D, ast.C);
+   public Object visitCompoundProgram(CompoundProgram ast, Object obj) {
+    return layoutBinary("Comp.Program", ast.P, ast.C);
   }
  
    private DrawingTree layoutCaption (String name) {

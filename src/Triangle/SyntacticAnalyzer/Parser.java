@@ -27,7 +27,8 @@
  import Triangle.AbstractSyntaxTrees.CharacterExpression;
  import Triangle.AbstractSyntaxTrees.CharacterLiteral;
  import Triangle.AbstractSyntaxTrees.Command;
- import Triangle.AbstractSyntaxTrees.ConstActualParameter;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
+import Triangle.AbstractSyntaxTrees.ConstActualParameter;
  import Triangle.AbstractSyntaxTrees.ConstDeclaration;
  import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
  import Triangle.AbstractSyntaxTrees.Declaration;
@@ -60,7 +61,7 @@
  import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
  import Triangle.AbstractSyntaxTrees.Operator;
  import Triangle.AbstractSyntaxTrees.PackageDeclaration;
- import Triangle.AbstractSyntaxTrees.ProgramPackage;
+ import Triangle.AbstractSyntaxTrees.Package;
  import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
  import Triangle.AbstractSyntaxTrees.ProcActualParameter;
  import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -79,7 +80,8 @@
  import Triangle.AbstractSyntaxTrees.SequentialCommand;
  import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
  import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
- import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
+import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
  import Triangle.AbstractSyntaxTrees.SimpleVname;
  import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
  import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
@@ -179,6 +181,7 @@
   */
   
   // Program modificado por Andrea
+  /* 
   public Program parseProgram() {
     Program programAST = null;
 
@@ -219,7 +222,48 @@
 
     } catch (SyntaxError s) { return null; }
     return programAST;
+  }*/
+
+  public Program parseProgram() {
+ 
+    Program programAST = null;
+
+    previousTokenPosition.start = 0;
+    previousTokenPosition.finish = 0;
+    currentToken = lexicalAnalyser.scan();
+
+    try {
+      if(currentToken.kind == Token.PACKAGE) {
+        Package pAST = parsePackage();
+        Command cAST = parseCommand();
+        programAST = new CompoundProgram(pAST, cAST, previousTokenPosition);
+        
+      } else {
+        Command cAST = parseCommand();
+        programAST = new SimpleProgram(cAST, previousTokenPosition);
+      }
+      
+      if (currentToken.kind != Token.EOT) {
+        syntacticError("\"%\" not expected after end of program",
+          currentToken.spelling);
+      }
+    }
+    catch (SyntaxError s) { return null; }
+    return programAST;
   }
+
+  public Package parsePackage() throws SyntaxError{
+    Package pAST = null;
+    SourcePosition packagePos = new SourcePosition();
+    start(packagePos);
+    pAST = parsePackageDeclaration();
+    while(currentToken.kind == Token.PACKAGE) {
+      Package pdAST = parsePackageDeclaration();
+      finish(packagePos);
+      pAST = new SequentialPackageDeclaration(pAST, pdAST, packagePos);
+    }
+    return pAST;
+  } 
 
 
  
@@ -886,8 +930,8 @@
    /*
    * Andrea
    */
-  PackageDeclaration parsePackageDeclaration() throws SyntaxError {
-    PackageDeclaration packDeclarationAST = null; // in case there's a syntactic error
+  Package parsePackageDeclaration() throws SyntaxError {
+    Package packDeclarationAST = null; // in case there's a syntactic error
 
     SourcePosition packDeclarationPos = new SourcePosition();
     start(packDeclarationPos);
@@ -908,31 +952,6 @@
     
     return packDeclarationAST;
   }
-
-  /*
-   * Andrea
-   */
-  SequentialPackageDeclaration parseSequentialPackageDeclaration() throws SyntaxError {
-    SequentialPackageDeclaration seqPackDeclarationAST = null; // in case there's a syntactic error
-
-    SourcePosition seqPackDeclarationPos = new SourcePosition();
-    start(seqPackDeclarationPos);
-
-    if (currentToken.kind == Token.PACKAGE) {
-      acceptIt();
-      Declaration dAST1 = parseDeclaration();
-      Declaration dAST2 = parseDeclaration();
-      finish(seqPackDeclarationPos);
-      seqPackDeclarationAST = new SequentialPackageDeclaration(dAST1, dAST2, seqPackDeclarationPos);
-    
-    } else {
-      syntacticError("\"%\" cannot start a Sequential Package Declaration",
-        currentToken.spelling);
-    }
-    
-    return seqPackDeclarationAST;
-  }
- 
 
  ///////////////////////////////////////////////////////////////////////////////
  //

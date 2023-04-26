@@ -118,6 +118,6 @@ public interface Visitor {
   public abstract Object visitSubscriptVname(SubscriptVname ast, Object o);
 
   // Programs
-  public abstract Object visitProgram(Program ast, Object o);
-  public abstract Object visitProgramPackage(ProgramPackage ast, Object o);
+  public abstract Object visitSimpleProgram(SimpleProgram ast, Object o);
+  public abstract Object visitCompoundProgram(CompoundProgram ast, Object o);
 }

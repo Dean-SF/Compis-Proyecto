@@ -17,6 +17,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -49,7 +50,6 @@ import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PackageDeclaration;
-import Triangle.AbstractSyntaxTrees.ProgramPackage;
 import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -65,6 +65,7 @@ import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
@@ -407,8 +408,8 @@ public class TableVisitor implements Visitor {
    * Visit Sequential package declaration Andrea
    */
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) { 
-    ast.D1.visit(this, null); 
-    ast.D2.visit(this, null);
+    ast.P1.visit(this, null); 
+    ast.P2.visit(this, null);
     
     return(null);   
     }
@@ -682,7 +683,7 @@ public class TableVisitor implements Visitor {
 
   // <editor-fold defaultstate="collapsed" desc=" Table Creation Methods ">
   // Programs
-  public Object visitProgram(Program ast, Object o) { 
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) { 
       ast.C.visit(this, null);
       
       return(null);
@@ -691,8 +692,8 @@ public class TableVisitor implements Visitor {
   /*
    * Andrea
    */
-  public Object visitProgramPackage(ProgramPackage ast, Object o) { 
-    ast.D.visit(this, null); 
+  public Object visitCompoundProgram(CompoundProgram ast, Object o) { 
+    ast.P.visit(this, null); 
     ast.C.visit(this, null);
     
     return(null);
@@ -724,7 +725,13 @@ public class TableVisitor implements Visitor {
      */
     public DefaultTableModel getTable(Program ast) {
         model = new DefaultTableModel((new String[] {"Name", "Type", "Size", "Level", "Displacement", "Value"}), 0);
-        visitProgram(ast, null);
+        if(ast instanceof SimpleProgram) {
+            visitSimpleProgram((SimpleProgram)ast, null);
+        } if(ast instanceof CompoundProgram) {
+            visitCompoundProgram((CompoundProgram)ast, null);
+        }
+        
+        
         
         return(model);
     }

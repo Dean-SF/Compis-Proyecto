@@ -7,7 +7,7 @@
  import Triangle.SyntacticAnalyzer.SourcePosition;
  
  
- public class PackageDeclaration extends Declaration {
+ public class PackageDeclaration extends Package {
  
     public PackageDeclaration (Identifier iAST, Declaration dAST, SourcePosition thePosition) {
        super (thePosition);

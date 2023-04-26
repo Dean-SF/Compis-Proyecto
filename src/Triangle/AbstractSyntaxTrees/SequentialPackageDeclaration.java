@@ -7,19 +7,19 @@
  import Triangle.SyntacticAnalyzer.SourcePosition;
  
  
- public class SequentialPackageDeclaration extends Declaration {
+ public class SequentialPackageDeclaration extends Package {
  
-    public SequentialPackageDeclaration (Declaration dAST1, Declaration dAST2, SourcePosition thePosition) {
+    public SequentialPackageDeclaration (Package pAST1, Package pAST2, SourcePosition thePosition) {
        super (thePosition); 
-       D1 = dAST1;
-       D2 = dAST2;
+       P1 = pAST1;
+       P2 = pAST2;
     }
    
     public Object visit(Visitor v, Object o) {
         return v.visitSequentialPackageDeclaration(this, o);
     }
 
-    public Declaration D2;
-    public Declaration D1;
+    public Package P2;
+    public Package P1;
    }
  
