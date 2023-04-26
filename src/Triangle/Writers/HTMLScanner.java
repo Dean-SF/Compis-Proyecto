@@ -12,16 +12,22 @@
  * of the authors.
  */
 
-package Triangle.SyntacticAnalyzer;
+package Triangle.Writers;
 
-public final class Scanner {
+import java.io.IOException;
 
+import Triangle.SyntacticAnalyzer.SourceFile;
+import Triangle.SyntacticAnalyzer.SourcePosition;
+import Triangle.SyntacticAnalyzer.Token;
+
+public final class HTMLScanner {
+
+  private WriterHTML writerHTML;
   private SourceFile sourceFile;
-  private boolean debug;
+  private Token currentToken;
 
   private char currentChar;
   private StringBuffer currentSpelling;
-  private boolean currentlyScanningToken;
 
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -43,22 +49,17 @@ public final class Scanner {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  public Scanner(SourceFile source) {
-    sourceFile = source;
+  public HTMLScanner(String sourceName) {
+    this.writerHTML = new WriterHTML(sourceName);
+    sourceFile = new SourceFile(sourceName);;
     currentChar = sourceFile.getSource();
-    debug = false;
-  }
 
-  public void enableDebugging() {
-    debug = true;
   }
 
   // takeIt appends the current character to the current token, and gets
   // the next character from the source program.
-
   private void takeIt() {
-    if (currentlyScanningToken)
-      currentSpelling.append(currentChar);
+    currentSpelling.append(currentChar);
     currentChar = sourceFile.getSource();
   }
 
@@ -73,12 +74,26 @@ public final class Scanner {
           takeIt();
         if (currentChar == SourceFile.EOL)
           takeIt();
+        writerHTML.commentedWrite(currentSpelling.toString());
       }
       break;
-    
-    case ' ': case '\n': case '\r': case '\t':
+    case ' ':
+      writerHTML.writeSpace();
       takeIt();
       break;
+    case '\n':
+      writerHTML.writeNewLine();
+      takeIt();
+      break;
+    case '\r':
+      writerHTML.writeReturn();
+      takeIt();
+      break;
+    case '\t':
+      writerHTML.writeTab();
+      takeIt();
+      break;
+      
       
     }
   }
@@ -198,7 +213,7 @@ public final class Scanner {
     SourcePosition pos;
     int kind;
 
-    currentlyScanningToken = false;
+    currentSpelling = new StringBuffer("");
     while (currentChar == '!'
            || currentChar == ' '
            || currentChar == '\n'
@@ -206,7 +221,6 @@ public final class Scanner {
            || currentChar == '\t')
       scanSeparator();
 
-    currentlyScanningToken = true;
     currentSpelling = new StringBuffer("");
     pos = new SourcePosition();
     pos.start = sourceFile.getCurrentLine();
@@ -215,9 +229,31 @@ public final class Scanner {
 
     pos.finish = sourceFile.getCurrentLine();
     tok = new Token(kind, currentSpelling.toString(), pos);
-    if (debug)
-      System.out.println(tok);
+    
+    if(tok.kind == Token.IDENTIFIER ||
+       tok.kind == Token.OPERATOR   ||
+      (Token.DOT <= tok.kind && tok.kind <= Token.RCURLY)) {
+      writerHTML.defaultWrite(tok.spelling);
+    } else if (Token.ARRAY <= tok.kind && tok.kind <= Token.WHILE) {
+      writerHTML.reservedWrite(tok.spelling);
+    } else if (tok.kind == Token.INTLITERAL ||
+               tok.kind == Token.CHARLITERAL) {
+      writerHTML.literalWrite(tok.spelling);
+               }
     return tok;
+  }
+
+  public void exportHTML() {
+    currentToken = scan();
+    while(currentToken.kind != Token.EOT) {
+      currentToken = scan();
+    }
+    try {
+      writerHTML.exportFile();
+      System.out.println("exporting HTML was successful");
+    } catch (IOException e) {
+      System.out.println("Error while exporting HTML");
+    }
   }
 
 }

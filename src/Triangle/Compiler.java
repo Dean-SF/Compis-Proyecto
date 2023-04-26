@@ -74,7 +74,7 @@ public class Compiler {
             System.exit(1);
         }
         writerHTML = new WriterHTML(sourceName);
-        scanner  = new Scanner(source,writerHTML);
+        scanner  = new Scanner(source);
         reporter = new ErrorReporter();
         parser   = new Parser(scanner, reporter);
         checker  = new Checker(reporter);

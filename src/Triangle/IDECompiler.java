@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import Triangle.SyntacticAnalyzer.SourceFile;
+import Triangle.Writers.HTMLScanner;
 import Triangle.Writers.WriterHTML;
 import Triangle.Writers.WriterXML;
 import Triangle.SyntacticAnalyzer.Scanner;
@@ -49,10 +50,10 @@ public class IDECompiler {
                            " **********");
         
         System.out.println("Syntactic Analysis ...");
-        WriterHTML writerHTML = new WriterHTML(sourceName);
+        HTMLScanner htmlScanner = new HTMLScanner(sourceName);
         WriterXML xmlMaker = new WriterXML(sourceName);
         SourceFile source = new SourceFile(sourceName);
-        Scanner scanner = new Scanner(source,writerHTML);
+        Scanner scanner = new Scanner(source);
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
@@ -75,22 +76,18 @@ public class IDECompiler {
                 }
             }
         }*/
-        try {
-			writerHTML.exportFile();
-		} catch (IOException e) {
-			System.out.println("Error while exporting HTML.");
-		}
+        
         if (success) {
             System.out.println("Compilation was successful.");
             try {
                 xmlMaker.writeXML(rootAST);
-                System.out.println("XML was successful.");
+                System.out.println("exporting XML was successful.");
             } catch (IOException | NullPointerException e) {
-                System.out.println("XML was unsuccessful.");
+                System.out.println("exporting XML was unsuccessful.");
             }
         } else
             System.out.println("Compilation was unsuccessful.");
-        
+        htmlScanner.exportHTML();
         return(success);
     }
       
