@@ -1,5 +1,1 @@
-if myPackage $ myVar (var myParameterVar) then 
-	skip 
-else 
-	skip
-end
+myPackage $ hola[1] := 1

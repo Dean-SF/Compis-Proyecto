@@ -13,10 +13,11 @@ import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
@@ -62,13 +63,14 @@ import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
@@ -662,26 +664,41 @@ public class WriterXMLVisitor implements Visitor {
 
 
     // Value-or-variable names
-    public Object visitDotVname(DotVname ast, Object obj) {
-        writeLineXML("<DotVname>");
+    public Object visitDotVarname(DotVarname ast, Object obj) {
+        writeLineXML("<DotVarname>");
         ast.V.visit(this, null);
         ast.I.visit(this, null);
-        writeLineXML("</DotVname>");
+        writeLineXML("</DotVarname>");
+        return null;
+    }
+
+    public Object visitSimpleVarname(SimpleVarname ast, Object obj) {
+        writeLineXML("<SimpleVarname>");
+        ast.I.visit(this, null);
+        writeLineXML("</SimpleVarname>");
+        return null;
+    }
+
+    public Object visitSubscriptVarname(SubscriptVarname ast, Object obj) {
+        writeLineXML("<SubscriptVarname>");
+        ast.V.visit(this, null);
+        ast.E.visit(this, null);
+        writeLineXML("</SubscriptVarname>");
         return null;
     }
 
     public Object visitSimpleVname(SimpleVname ast, Object obj) {
         writeLineXML("<SimpleVname>");
-        ast.I.visit(this, null);
+        ast.VAR.visit(this, null);
         writeLineXML("</SimpleVname>");
         return null;
     }
 
-    public Object visitSubscriptVname(SubscriptVname ast, Object obj) {
-        writeLineXML("<SubscriptVname>");
-        ast.V.visit(this, null);
-        ast.E.visit(this, null);
-        writeLineXML("</SubscriptVname>");
+    public Object visitCompoundVname(CompoundVname ast, Object obj) {
+        writeLineXML("<CompoundVname>");
+        ast.I.visit(this, null);
+        ast.VAR.visit(this, null);
+        writeLineXML("</CompoundVname>");
         return null;
     }
 

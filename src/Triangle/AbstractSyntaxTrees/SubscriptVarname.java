@@ -1,5 +1,5 @@
 /*
- * @(#)Vname.java                        2.1 2003/10/07
+ * @(#)SubscriptVname.java                        2.1 2003/10/07
  *
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
@@ -16,9 +16,18 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
-public abstract class Vname extends AST {
+public class SubscriptVarname extends Varname {
 
-  public Vname (SourcePosition thePosition) {
+  public SubscriptVarname (Varname vAST, Expression eAST, SourcePosition thePosition) {
     super (thePosition);
+    V = vAST;
+    E = eAST;
   }
+
+  public Object visit (Visitor v, Object o) {
+    return v.visitSubscriptVarname(this, o);
+  }
+
+  public Expression E;
+  public Varname V;
 }

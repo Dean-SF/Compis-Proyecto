@@ -18,10 +18,11 @@ import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
@@ -67,13 +68,14 @@ import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
@@ -419,16 +421,24 @@ public class TreeVisitor implements Visitor {
     
     // <editor-fold defaultstate="collapsed" desc=" Values or Variable Names ">
     // Values or Variable Names
-    public Object visitDotVname(DotVname ast, Object obj) {
-        return(createBinary("Dot Vname", ast.I, ast.V));
+    public Object visitDotVarname(DotVarname ast, Object obj) {
+        return(createBinary("Dot Varname", ast.I, ast.V));
     }
     
+    public Object visitSimpleVarname(SimpleVarname ast, Object obj) {
+        return(createUnary("Simple Varname", ast.I));
+    }
+    
+    public Object visitSubscriptVarname(SubscriptVarname ast, Object obj) {
+        return(createBinary("Subscript Varname", ast.V, ast.E));
+    }
+
     public Object visitSimpleVname(SimpleVname ast, Object obj) {
-        return(createUnary("Simple Vname", ast.I));
+        return(createUnary("Simple Vname", ast.VAR));
     }
     
-    public Object visitSubscriptVname(SubscriptVname ast, Object obj) {
-        return(createBinary("Subscript Vname", ast.V, ast.E));
+    public Object visitCompoundVname(CompoundVname ast, Object obj) {
+        return(createBinary("Compound Vname", ast.I, ast.VAR));
     }
     
     public Object visitProgram(Program ast, Object obj) {

@@ -18,10 +18,11 @@ import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
@@ -67,13 +68,14 @@ import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
@@ -666,25 +668,38 @@ public class TableVisitor implements Visitor {
 
   // <editor-fold defaultstate="collapsed" desc=" Values or Variable Names ">
   // Value-or-variable names
-  public Object visitDotVname(DotVname ast, Object o) { 
+  public Object visitDotVarname(DotVarname ast, Object o) { 
       ast.I.visit(this, null);
       ast.V.visit(this, null);
   
       return(null);
   }
   
-  public Object visitSimpleVname(SimpleVname ast, Object o) { 
+  public Object visitSimpleVarname(SimpleVarname ast, Object o) { 
       ast.I.visit(this, null);
   
       return(null);
   }
   
-  public Object visitSubscriptVname(SubscriptVname ast, Object o) { 
+  public Object visitSubscriptVarname(SubscriptVarname ast, Object o) { 
       ast.E.visit(this, null);
       ast.V.visit(this, null);
   
       return(null);
   }
+
+  public Object visitSimpleVname(SimpleVname ast, Object o) { 
+    ast.VAR.visit(this, null);
+
+    return(null);
+}
+
+public Object visitCompoundVname(CompoundVname ast, Object o) { 
+    ast.I.visit(this, null);
+    ast.VAR.visit(this, null);
+
+    return(null);
+}
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Table Creation Methods ">

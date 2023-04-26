@@ -30,10 +30,11 @@ import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SkipCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
@@ -79,13 +80,14 @@ import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
@@ -415,17 +417,24 @@ public class LayoutVisitor implements Visitor {
 
 
   // Value-or-variable names
-  public Object visitDotVname(DotVname ast, Object obj) {
-    return layoutBinary("DotVname", ast.I, ast.V);
+  public Object visitDotVarname(DotVarname ast, Object obj) {
+    return layoutBinary("DotVarname", ast.I, ast.V);
+  }
+
+  public Object visitSimpleVarname(SimpleVarname ast, Object obj) {
+    return layoutUnary("Sim.Varname", ast.I);
+  }
+
+  public Object visitSubscriptVarname(SubscriptVarname ast, Object obj) {
+    return layoutBinary("Sub.Varname", ast.V, ast.E);
   }
 
   public Object visitSimpleVname(SimpleVname ast, Object obj) {
-    return layoutUnary("Sim.Vname", ast.I);
+    return layoutUnary("Sim.Vname", ast.VAR);
   }
 
-  public Object visitSubscriptVname(SubscriptVname ast, Object obj) {
-    return layoutBinary("Sub.Vname",
-        ast.V, ast.E);
+  public Object visitCompoundVname(CompoundVname ast, Object obj) {
+    return layoutBinary("Com.Vname", ast.I, ast.VAR);
   }
 
 

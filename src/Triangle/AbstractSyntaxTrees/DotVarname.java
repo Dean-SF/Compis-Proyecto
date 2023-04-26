@@ -16,18 +16,18 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
-public class DotVname extends Vname {
+public class DotVarname extends Varname {
 
-  public DotVname (Vname vAST, Identifier iAST, SourcePosition thePosition) {
+  public DotVarname (Varname vAST, Identifier iAST, SourcePosition thePosition) {
     super (thePosition);
     V = vAST;
     I = iAST;
   }
 
   public Object visit (Visitor v, Object o) {
-    return v.visitDotVname(this, o);
+    return v.visitDotVarname(this, o);
   }
 
   public Identifier I;
-  public Vname V;
+  public Varname V;
 }
