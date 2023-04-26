@@ -27,6 +27,7 @@ import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
 import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
@@ -61,6 +62,8 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.Package;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -78,8 +81,10 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
@@ -157,24 +162,46 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-  public Program parseProgram() {
+public Program parseProgram() {
+ 
+  Program programAST = null;
 
-    Program programAST = null;
+  previousTokenPosition.start = 0;
+  previousTokenPosition.finish = 0;
+  currentToken = lexicalAnalyser.scan();
 
-    previousTokenPosition.start = 0;
-    previousTokenPosition.finish = 0;
-    currentToken = lexicalAnalyser.scan();
-    try {
+  try {
+    if(currentToken.kind == Token.PACKAGE) {
+      Package pAST = parsePackage();
       Command cAST = parseCommand();
-      programAST = new Program(cAST, previousTokenPosition);
-      if (currentToken.kind != Token.EOT) {
-        syntacticError("\"%\" not expected after end of program",
-          currentToken.spelling);
-      }
+      programAST = new CompoundProgram(pAST, cAST, previousTokenPosition);
+      
+    } else {
+      Command cAST = parseCommand();
+      programAST = new SimpleProgram(cAST, previousTokenPosition);
     }
-    catch (SyntaxError s) { return null; }
-    return programAST;
+    
+    if (currentToken.kind != Token.EOT) {
+      syntacticError("\"%\" not expected after end of program",
+        currentToken.spelling);
+    }
   }
+  catch (SyntaxError s) { return null; }
+  return programAST;
+}
+
+public Package parsePackage() throws SyntaxError{
+  Package pAST = null;
+  SourcePosition packagePos = new SourcePosition();
+  start(packagePos);
+  pAST = parsePackageDeclaration();
+  while(currentToken.kind == Token.PACKAGE) {
+    Package pdAST = parsePackageDeclaration();
+    finish(packagePos);
+    pAST = new SequentialPackageDeclaration(pAST, pdAST, packagePos);
+  }
+  return pAST;
+} 
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -993,6 +1020,31 @@ public class Parser {
 
     }
     return declarationAST;
+  }
+   /*
+   * Andrea
+   */
+  Package parsePackageDeclaration() throws SyntaxError {
+    Package packDeclarationAST = null; // in case there's a syntactic error
+
+    SourcePosition packDeclarationPos = new SourcePosition();
+    start(packDeclarationPos);
+
+    if (currentToken.kind == Token.PACKAGE) {
+      acceptIt();
+      Identifier iAST = parseIdentifier();
+      accept(Token.IS);
+      Declaration dAST = parseDeclaration();
+      accept(Token.END);
+      finish(packDeclarationPos);
+      packDeclarationAST = new PackageDeclaration(iAST, dAST, packDeclarationPos);
+    
+    } else {
+      syntacticError("\"%\" cannot start a Package Declaration",
+        currentToken.spelling);
+    }
+    
+    return packDeclarationAST;
   }
 
 ///////////////////////////////////////////////////////////////////////////////

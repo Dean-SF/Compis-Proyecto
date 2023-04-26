@@ -13,6 +13,7 @@ import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
 import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
@@ -44,6 +45,7 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -60,8 +62,10 @@ import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
 import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
@@ -403,6 +407,23 @@ public class WriterXMLVisitor implements Visitor {
         return null;
     }
 
+    //Packages
+    public Object visitPackageDeclaration(PackageDeclaration ast, Object obj) {
+        writeLineXML("<PackageDeclaration>");
+        ast.D.visit(this, null);
+        ast.I.visit(this, null);
+        writeLineXML("</PackageDeclaration>");
+        return null;
+    }
+
+    public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object obj) {
+        writeLineXML("<SequentialPackageDeclaration>");
+        ast.P1.visit(this, null);
+        ast.P2.visit(this, null);
+        writeLineXML("</SequentialPackageDeclaration>");
+        return null;
+    }
+
     //Proc_Funcs
     public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object obj) {
         writeLineXML("<ProcedureProcFuncs>");
@@ -704,10 +725,17 @@ public class WriterXMLVisitor implements Visitor {
 
 
     // Programs
-    public Object visitProgram(Program ast, Object obj) {
-        writeLineXML("<Program>");
+    public Object visitSimpleProgram(SimpleProgram ast, Object obj) {
+        writeLineXML("<SimpleProgram>");
         ast.C.visit(this, null);
-        writeLineXML("</Program>");
+        writeLineXML("</SimpleProgram>");
+        return null;
+    }
+    public Object visitCompoundProgram(CompoundProgram ast, Object obj) {
+        writeLineXML("<CompoundProgram>");
+        ast.P.visit(this, null);
+        ast.C.visit(this, null);
+        writeLineXML("</CompoundProgram>");
         return null;
     }
 

@@ -19,6 +19,7 @@ import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
 import Triangle.AbstractSyntaxTrees.CompoundVname;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -51,6 +52,8 @@ import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PrivDeclaration;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -67,6 +70,7 @@ import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
@@ -422,6 +426,26 @@ public class TableVisitor implements Visitor {
     return(null);
   }
   
+  /*
+   * Visit program declaration Andrea
+   */
+  public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {   
+    ast.I.visit(this, null);
+    ast.D.visit(this, null);
+    
+    return(null);
+  }
+
+  /*
+   * Visit Sequential package declaration Andrea
+   */
+  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) { 
+    ast.P1.visit(this, null); 
+    ast.P2.visit(this, null);
+    
+    return(null);   
+    }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
@@ -704,11 +728,21 @@ public Object visitCompoundVname(CompoundVname ast, Object o) {
 
   // <editor-fold defaultstate="collapsed" desc=" Table Creation Methods ">
   // Programs
-  public Object visitProgram(Program ast, Object o) { 
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) { 
       ast.C.visit(this, null);
       
       return(null);
   }
+
+  /*
+   * Andrea
+   */
+  public Object visitCompoundProgram(CompoundProgram ast, Object o) { 
+    ast.P.visit(this, null); 
+    ast.C.visit(this, null);
+    
+    return(null);
+}
   
     /**
      * Adds an identifier to the table.
@@ -736,7 +770,13 @@ public Object visitCompoundVname(CompoundVname ast, Object o) {
      */
     public DefaultTableModel getTable(Program ast) {
         model = new DefaultTableModel((new String[] {"Name", "Type", "Size", "Level", "Displacement", "Value"}), 0);
-        visitProgram(ast, null);
+        if(ast instanceof SimpleProgram) {
+            visitSimpleProgram((SimpleProgram)ast, null);
+        } if(ast instanceof CompoundProgram) {
+            visitCompoundProgram((CompoundProgram)ast, null);
+        }
+        
+        
         
         return(model);
     }

@@ -60,6 +60,10 @@ public interface Visitor {
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
   public abstract Object visitRecDeclaration(RecDeclaration ast, Object o); //Ericka
   public abstract Object visitPrivDeclaration(PrivDeclaration ast, Object o); //Ericka
+  // Package Declaration Andrea 
+  public abstract Object visitPackageDeclaration(PackageDeclaration ast, Object o);
+  // Sequential Package Declaration Andrea
+  public abstract Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o);
 
   
   
@@ -125,6 +129,6 @@ public interface Visitor {
   public abstract Object visitCompoundVname(CompoundVname ast, Object o);
 
   // Programs
-  public abstract Object visitProgram(Program ast, Object o);
-
+  public abstract Object visitSimpleProgram(SimpleProgram ast, Object o);
+  public abstract Object visitCompoundProgram(CompoundProgram ast, Object o);
 }

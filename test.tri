@@ -1,1 +1,13 @@
-myPackage $ hola[1] := 1
+package myPackage ~
+	const myConst ~ 7
+end
+package myPackage2 ~
+	const myConst2 ~ 10
+end
+package myPackage3 ~
+	const myConst2 ~ 13
+end
+for identificador := 1>3 .. 1<3
+until 4>3 do
+	hola := 3
+end

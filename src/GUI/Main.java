@@ -33,6 +33,8 @@ import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import Triangle.IDECompiler;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Core.ExampleFileFilter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
@@ -617,7 +619,10 @@ public class Main extends javax.swing.JFrame {
                 output.setDelegate(delegateTAMCode);
                 disassembler.Disassemble(desktopPane.getSelectedFrame().getTitle().replace(".tri", ".tam"));
                 if(compiler.getAST() != null) {
-                    ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitProgram(compiler.getAST(), null));
+                    if(compiler.getAST() instanceof SimpleProgram)
+                        ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitSimpleProgram((SimpleProgram)compiler.getAST(), null));
+                    else
+                        ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitCompoundProgram((CompoundProgram)compiler.getAST(), null));
                     ((FileFrame)desktopPane.getSelectedFrame()).setTable(tableVisitor.getTable(compiler.getAST()));
                 }
                 
