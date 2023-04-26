@@ -117,9 +117,12 @@ public interface Visitor {
   public abstract Object visitOperator(Operator ast, Object o);
 
   // Value-or-variable names
-  public abstract Object visitDotVname(DotVname ast, Object o);
+  public abstract Object visitDotVarname(DotVarname ast, Object o);
+  public abstract Object visitSimpleVarname(SimpleVarname ast, Object o);
+  public abstract Object visitSubscriptVarname(SubscriptVarname ast, Object o);
+
   public abstract Object visitSimpleVname(SimpleVname ast, Object o);
-  public abstract Object visitSubscriptVname(SubscriptVname ast, Object o);
+  public abstract Object visitCompoundVname(CompoundVname ast, Object o);
 
   // Programs
   public abstract Object visitProgram(Program ast, Object o);

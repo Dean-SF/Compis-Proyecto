@@ -27,13 +27,15 @@ import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SkipCommand;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
@@ -79,19 +81,20 @@ import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
 import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarname;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
+import Triangle.AbstractSyntaxTrees.Varname;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 
@@ -314,23 +317,40 @@ public class Parser {
 
     switch (currentToken.kind) {
 
-    case Token.IDENTIFIER:
-      {
+    case Token.IDENTIFIER:{
         Identifier iAST = parseIdentifier();
         LongIdentifier liAST = parseRestOfLongIdentifier(iAST);
-        if (currentToken.kind == Token.LPAREN) {
-          acceptIt();
-          ActualParameterSequence apsAST = parseActualParameterSequence();
-          accept(Token.RPAREN);
-          finish(commandPos);
-          commandAST = new CallCommand(liAST, apsAST, commandPos);
+        Vname vAST = null;
+        Expression eAST = null;
 
-        } else {
-          Vname vAST = parseRestOfVname(iAST);
-          accept(Token.BECOMES);
-          Expression eAST = parseExpression();
-          finish(commandPos);
-          commandAST = new AssignCommand(vAST, eAST, commandPos);
+        switch (currentToken.kind) {
+          case Token.BECOMES:
+            vAST = parseSpecialVnameCase(liAST);
+            acceptIt();
+            eAST = parseExpression();
+            finish(commandPos);
+            commandAST = new AssignCommand(vAST, eAST, commandPos);
+            break;
+          case Token.DOT:
+          case Token.LBRACKET:
+            vAST = parseSpecialVnameCase(liAST);
+            accept(Token.BECOMES);
+            eAST = parseExpression();
+            finish(commandPos);
+            commandAST = new AssignCommand(vAST, eAST, commandPos);
+            break;
+          case Token.LPAREN:
+            acceptIt();
+            ActualParameterSequence apsAST = parseActualParameterSequence();
+            accept(Token.RPAREN);
+            finish(commandPos);
+            commandAST = new CallCommand(liAST, apsAST, commandPos);
+            break;
+          default:
+            syntacticError("\"%\" cannot continue a Assign command",
+            currentToken.spelling);
+            break;
+          
         }
       }
       break;
@@ -766,17 +786,79 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-  Vname parseVname () throws SyntaxError {
+  /*
+  Vname parseSpecialVnameCase (Identifier i1AST, Identifier i2AST, boolean simple) throws SyntaxError  {
+    Vname vAST = null;
+    
+    SourcePosition vnamePos1 = new SourcePosition();
+    vnamePos1 = i1AST.position;
+
+    Varname varAST = parseRestOfVarName(i2AST);
+
+    finish(vnamePos1);
+    if(simple) {
+      vAST = new SimpleVname(varAST, vnamePos1);
+    } else {
+      vAST = new CompoundVname(i1AST, varAST, vnamePos1);
+    }
+    return vAST;
+  }*/
+
+  Vname parseSpecialVnameCase (LongIdentifier liAST) throws SyntaxError  {
+    Vname vAST = null;
+    SourcePosition vnamePos = new SourcePosition();
+    if(liAST instanceof CompoundLongIdentifier) {
+      Identifier i1AST = ((CompoundLongIdentifier)liAST).I1;
+      Identifier i2AST = ((CompoundLongIdentifier)liAST).I2;
+      vnamePos = i1AST.position;
+      Varname varAST = parseRestOfVarName(i2AST);
+      finish(vnamePos);
+      vAST = new CompoundVname(i1AST, varAST, vnamePos);
+    } else if(liAST instanceof SimpleLongIdentifier) {
+      Identifier iAST = ((SimpleLongIdentifier)liAST).I;
+      vnamePos = iAST.position;
+      Varname varAST = parseRestOfVarName(iAST);
+      finish(vnamePos);
+      vAST = new SimpleVname(varAST, vnamePos);
+    }
+    return vAST;
+  }
+
+  Vname parseVname() throws SyntaxError {
     Vname vnameAST = null; // in case there's a syntactic error
     Identifier iAST = parseIdentifier();
     vnameAST = parseRestOfVname(iAST);
     return vnameAST;
   }
 
-  Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
-    SourcePosition vnamePos = new SourcePosition();
-    vnamePos = identifierAST.position;
-    Vname vAST = new SimpleVname(identifierAST, vnamePos);
+  Vname parseRestOfVname(Identifier iAST) throws SyntaxError {
+    SourcePosition commandPos = new SourcePosition();
+    commandPos = iAST.position;
+    
+    if(currentToken.kind == Token.DENOTE) {
+      acceptIt();;
+      Varname varAST = parseVarName();
+      finish(commandPos);
+      return new CompoundVname(iAST, varAST, commandPos);
+      
+    } else {
+      Varname varAST = parseRestOfVarName(iAST);
+      finish(commandPos);
+      return new SimpleVname(varAST, commandPos);
+    }
+  }
+
+  Varname parseVarName () throws SyntaxError {
+    Varname varnameAST = null; // in case there's a syntactic error
+    Identifier iAST = parseIdentifier();
+    varnameAST = parseRestOfVarName(iAST);
+    return varnameAST;
+  }
+
+  Varname parseRestOfVarName(Identifier identifierAST) throws SyntaxError {
+    SourcePosition varnamePos = new SourcePosition();
+    varnamePos = identifierAST.position;
+    Varname vAST = new SimpleVarname(identifierAST, varnamePos);
 
     while (currentToken.kind == Token.DOT ||
            currentToken.kind == Token.LBRACKET) {
@@ -784,13 +866,13 @@ public class Parser {
       if (currentToken.kind == Token.DOT) {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        vAST = new DotVname(vAST, iAST, vnamePos);
+        vAST = new DotVarname(vAST, iAST, varnamePos);
       } else {
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.RBRACKET);
-        finish(vnamePos);
-        vAST = new SubscriptVname(vAST, eAST, vnamePos);
+        finish(varnamePos);
+        vAST = new SubscriptVarname(vAST, eAST, varnamePos);
       }
     }
     return vAST;

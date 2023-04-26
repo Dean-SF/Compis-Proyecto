@@ -1,5 +1,5 @@
 /*
- * @(#)SimpleVname.java                        2.1 2003/10/07
+ * @(#)Command.java                        2.1 2003/10/07
  *
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
@@ -18,14 +18,14 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class SimpleVname extends Vname {
 
-  public SimpleVname (Identifier iAST, SourcePosition thePosition) {
+  public SimpleVname (Varname varAST, SourcePosition thePosition) {
     super (thePosition);
-    I = iAST;
+    VAR = varAST;
   }
 
-  public Object visit (Visitor v, Object o) {
+  public Object visit(Visitor v, Object o) {
     return v.visitSimpleVname(this, o);
   }
 
-  public Identifier I;
+  public Varname VAR;
 }
