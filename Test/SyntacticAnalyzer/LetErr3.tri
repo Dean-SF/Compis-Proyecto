@@ -1,0 +1,6 @@
+! Let command : intento fallido, falta el in
+let
+	var x: Integer
+
+	print()
+end

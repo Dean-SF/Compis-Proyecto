@@ -181,11 +181,11 @@ public class TreeVisitor implements Visitor {
     }
 
     public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
-        return(createQuaternary("Procedure Proc_Funcs", ast.I, ast.FPS, ast.T, ast.E));
+        return(createQuaternary("Function Proc_Funcs", ast.I, ast.FPS, ast.T, ast.E));
     }
 
     public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
-        return(createBinary("Sequential Proc_Funcs", ast.PF1, ast.PF1));
+        return(createBinary("Sequential Proc_Funcs", ast.PF1, ast.PF2));
     }
 
     // </editor-fold>

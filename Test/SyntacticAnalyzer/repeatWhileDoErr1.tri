@@ -1,0 +1,5 @@
+! repeat while do command: falta el do
+
+repeat while n<5
+    n := n + 1
+end

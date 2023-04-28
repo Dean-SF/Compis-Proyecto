@@ -1,0 +1,10 @@
+!  Private compound declaration: Error sin in
+let
+    private
+        var myVar : Integer
+    in
+        var myVar2 : Integer
+
+in
+    skip
+end

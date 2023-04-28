@@ -1,0 +1,10 @@
+! Rec compound declaration: Error de proc-funcs no se cumple lo de ()+
+let
+    rec
+        proc myProc (var i : Integer) ~
+            skip
+        end 
+    end
+in  
+    skip
+end

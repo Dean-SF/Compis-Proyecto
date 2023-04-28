@@ -1,0 +1,4 @@
+! repeat times command: error sin end
+
+repeat 5 times do
+    n := n + 1

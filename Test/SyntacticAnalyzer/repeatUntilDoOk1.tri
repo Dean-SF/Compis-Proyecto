@@ -1,0 +1,5 @@
+! repeat while do command: caso funcional
+
+repeat until n<5 do
+    n := n + 1
+end

@@ -1,0 +1,5 @@
+! repeat times command: caso funcional
+
+repeat 5 times do
+    n := n + 1
+end

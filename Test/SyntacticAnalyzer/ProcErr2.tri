@@ -1,0 +1,8 @@
+! Proc Proc-Func single-declaration: Error sin end
+let
+    proc myProc (var i : Integer) ~
+        skip
+
+in
+    skip
+end

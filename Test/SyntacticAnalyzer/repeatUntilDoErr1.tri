@@ -1,0 +1,5 @@
+! repeat while do command: error sin do
+
+repeat until n<5
+    n := n + 1
+end

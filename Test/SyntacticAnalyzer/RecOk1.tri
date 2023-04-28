@@ -1,0 +1,14 @@
+! Rec compound declaration: caso funcional
+let
+    rec
+        proc myProc (var i : Integer) ~
+            skip
+        end
+        |
+        func myFunc (var i : Integer) : Integer ~
+            2 + 2
+        end
+    end
+in  
+    skip
+end

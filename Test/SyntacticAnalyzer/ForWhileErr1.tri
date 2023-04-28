@@ -1,0 +1,4 @@
+! For while command: Error sin while
+for  n := 0 .. 5 n < 10 do
+    count := count + n
+end

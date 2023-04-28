@@ -1,0 +1,4 @@
+! For until command: Error sin expression despues de until
+for  n := 0 .. 5 until do
+    count := count + n
+end

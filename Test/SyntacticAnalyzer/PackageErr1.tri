@@ -1,0 +1,4 @@
+! Packages: Error el Program solo tiene Packages y no tiene command
+package myPackage ~
+    var myVar : Integer
+end

@@ -1,0 +1,6 @@
+! Let command : intento fallido, intercambio entre el Declaration y Expression
+let
+	print() 
+in
+	var x: Integer
+end

@@ -1,0 +1,8 @@
+! Primary Expression Long identifier: existe el v-name pero no hacen conflicto 
+! error si se intenta hacer un vname en vez de un long identifier
+
+if myPackage $ myLongIdentifier.myIdentifier(var i) then
+    skip
+else
+    skip
+end

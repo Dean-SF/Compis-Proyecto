@@ -1,0 +1,10 @@
+!  Private compound declaration: caso funcional
+let
+    private
+        var myVar : Integer
+    in
+        var myVar2 : Integer
+    end
+in
+    skip
+end

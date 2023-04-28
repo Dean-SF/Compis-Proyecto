@@ -1,7 +1,0 @@
-let
-        proc sum(x : Integer, y : Integer) ~
-	putint(x+y)
-        end
-in
-    skip
-end

@@ -1,0 +1,18 @@
+! Rec compound declaration: caso funcional mas de 2 Proc-func
+let
+    rec
+        proc myProc (var i : Integer) ~
+            skip
+        end
+        |
+        func myFunc (var i : Integer) : Integer ~
+            2 + 2
+        end
+        |
+        func myFunc2 (var i : Integer) : Integer ~
+            3 + 3
+        end
+    end
+in  
+    skip
+end

@@ -374,7 +374,7 @@ public Package parsePackage() throws SyntaxError{
             commandAST = new CallCommand(liAST, apsAST, commandPos);
             break;
           default:
-            syntacticError("\"%\" cannot continue a Assign command",
+            syntacticError("\"%\" cannot continue a Call or Assign command ",
             currentToken.spelling);
             break;
           
@@ -525,57 +525,6 @@ public Package parsePackage() throws SyntaxError{
       break;
     }
 
-    /*
-    case Token.BEGIN:
-      acceptIt();
-      commandAST = parseCommand();
-      accept(Token.END);
-      break;
-
-    case Token.LET:
-      {
-        acceptIt();
-        Declaration dAST = parseDeclaration();
-        accept(Token.IN);
-        Command cAST = parseSingleCommand();
-        finish(commandPos);
-        commandAST = new LetCommand(dAST, cAST, commandPos);
-      }
-      break;
-
-    case Token.IF:
-      {
-        acceptIt();
-        Expression eAST = parseExpression();
-        accept(Token.THEN);
-        Command c1AST = parseSingleCommand();
-        accept(Token.ELSE);
-        Command c2AST = parseSingleCommand();
-        finish(commandPos);
-        commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
-      }
-      break;
-
-    case Token.WHILE:
-      {
-        acceptIt();
-        Expression eAST = parseExpression();
-        accept(Token.DO);
-        Command cAST = parseSingleCommand();
-        finish(commandPos);
-        commandAST = new WhileCommand(eAST, cAST, commandPos);
-      }
-      break;
-
-    case Token.SEMICOLON:
-    case Token.END:
-    case Token.ELSE:
-    case Token.IN:
-    case Token.EOT:
-
-      finish(commandPos);
-      commandAST = new EmptyCommand(commandPos);
-      break;*/
 
     default:
       syntacticError("\"%\" cannot start a command",
@@ -727,17 +676,16 @@ public Package parsePackage() throws SyntaxError{
       {
         Identifier iAST= parseIdentifier();
         LongIdentifier liAST = parseRestOfLongIdentifier(iAST);
-        if (currentToken.kind == Token.LPAREN) {
+        if(currentToken.kind != Token.LPAREN) {
+          Vname vAST = parseSpecialVnameCase(liAST);
+          finish(expressionPos);
+          expressionAST = new VnameExpression(vAST, expressionPos);
+        } else {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
           accept(Token.RPAREN);
           finish(expressionPos);
           expressionAST = new CallExpression(liAST, apsAST, expressionPos);
-
-        } else {
-          Vname vAST = parseRestOfVname(iAST);
-          finish(expressionPos);
-          expressionAST = new VnameExpression(vAST, expressionPos);
         }
       }
       break;
@@ -1246,12 +1194,17 @@ Proc_Funcs parseProcFuncs() throws SyntaxError{
   
   start(pfPos);
   pfAST = parseProcFunc();
-  do{
-    acceptIt();
-    Proc_Funcs pf2AST = parseProcFunc();
-    finish(pfPos);
-    pfAST = new SequentialProcFuncs(pfAST, pf2AST, pfPos);
-  }while(currentToken.kind == Token.OR);
+  if(currentToken.kind == Token.OR) {
+    do{
+      acceptIt();
+      Proc_Funcs pf2AST = parseProcFunc();
+      finish(pfPos);
+      pfAST = new SequentialProcFuncs(pfAST, pf2AST, pfPos);
+    }while(currentToken.kind == Token.OR);
+  } else {
+    syntacticError("\"%\" was expected", Token.spell(Token.OR));
+  }
+  
   return pfAST;
 }
 

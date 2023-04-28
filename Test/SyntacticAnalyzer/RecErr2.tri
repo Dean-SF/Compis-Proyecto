@@ -1,0 +1,14 @@
+! Rec compound declaration: Error sin end
+let
+    rec
+        proc myProc (var i : Integer) ~
+            skip
+        end
+        |
+        func myFunc (var i : Integer) : Integer ~
+            2 + 2
+        end
+
+in  
+    skip
+end

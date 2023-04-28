@@ -1,0 +1,8 @@
+! declaration: repeticion de compound-Declaration, falta un ";"
+let
+    var myVar : Integer ;
+    var myVar2 : Integer 
+    var myVar2 : Integer
+in
+    skip
+end

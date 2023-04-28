@@ -1,0 +1,4 @@
+! For command: Caso funcional
+for  n := 0 .. 5 do
+    count := count + n
+end

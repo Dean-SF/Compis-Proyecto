@@ -1,0 +1,4 @@
+! For until command: Caso funcional
+for  n := 0 .. 5 until n < 10 do
+    count := count + n
+end

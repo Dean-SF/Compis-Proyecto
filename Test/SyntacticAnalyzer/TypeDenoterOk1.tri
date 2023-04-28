@@ -1,0 +1,7 @@
+! Type-Denoter con long Identifier
+
+let
+    var myVar : myLongIdentifier
+in
+    skip
+end

@@ -1,0 +1,5 @@
+! Packages: Error sin "~"
+package myPackage
+    var myVar : Integer
+end
+skip

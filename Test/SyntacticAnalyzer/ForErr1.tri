@@ -1,0 +1,4 @@
+! For command: Error sin do
+for  n := 0 .. 5
+    count := count + n
+end

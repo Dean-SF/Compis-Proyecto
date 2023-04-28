@@ -1,5 +1,0 @@
-let
-	var x: Integer
-in
-	print()
-end

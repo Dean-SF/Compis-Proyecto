@@ -1,0 +1,8 @@
+! Fuc Proc-Func en single-declaration: Error sin end
+let
+    func myFunc (var i : Integer) : Integer ~
+        2 + 2
+
+in
+    skip
+end

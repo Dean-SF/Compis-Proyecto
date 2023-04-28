@@ -1,0 +1,8 @@
+! Fuc Proc-Func en single-declaration: error sin type-denoter
+let
+    func myFunc (var i : Integer) ~
+        2 + 2
+    end
+in
+    skip
+end

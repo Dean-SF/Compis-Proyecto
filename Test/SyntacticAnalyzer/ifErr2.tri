@@ -1,0 +1,6 @@
+! if command: simple con if else sin "else"
+if 1>3 then
+    putint(1)
+
+    putint(2)
+end

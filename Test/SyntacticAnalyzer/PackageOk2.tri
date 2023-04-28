@@ -1,0 +1,11 @@
+! Packages: Caso funcional, multiples Packages
+package myPackage ~
+    var myVar : Integer
+end
+package myPackage2 ~
+    var myVar2 : Integer
+end
+package myPackage3 ~
+    var myVar3 : Integer
+end
+skip
