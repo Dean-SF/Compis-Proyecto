@@ -1240,7 +1240,6 @@ Proc_Funcs parseProcFunc() throws SyntaxError{
       TypeDenoter tAST = parseTypeDenoter();
       accept(Token.IS);
       Expression eAST = parseExpression();
-      accept(Token.END);
       finish(pfPos);
       pfAST = new FunctionProc_Funcs(iAST, fpsAST, tAST, eAST, pfPos);
       break;

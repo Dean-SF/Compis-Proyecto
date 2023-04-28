@@ -86,7 +86,6 @@ public final class HTMLScanner {
       takeIt();
       break;
     case '\r':
-      writerHTML.writeReturn();
       takeIt();
       break;
     case '\t':

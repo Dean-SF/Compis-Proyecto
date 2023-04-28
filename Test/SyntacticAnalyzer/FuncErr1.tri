@@ -2,7 +2,6 @@
 let
     func myFunc (var i : Integer) ~
         2 + 2
-    end
 in
     skip
 end

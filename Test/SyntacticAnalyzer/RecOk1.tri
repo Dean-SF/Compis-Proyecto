@@ -7,7 +7,6 @@ let
         |
         func myFunc (var i : Integer) : Integer ~
             2 + 2
-        end
     end
 in  
     skip

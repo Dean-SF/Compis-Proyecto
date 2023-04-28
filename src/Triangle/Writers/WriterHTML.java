@@ -20,15 +20,11 @@ public class WriterHTML {
     }
 
     public void writeSpace() {
-        currentHTML += " ";
+        currentHTML += "&ensp;";
     }
 
     public void writeTab() {
-        currentHTML += " &emsp; ";
-    }
-
-    public void writeReturn() {
-        currentHTML += "\r\n";
+        currentHTML += "&emsp;";
     }
 
     public void defaultWrite(String token) {
