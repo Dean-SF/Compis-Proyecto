@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class CompoundVname extends Vname{
 
   public CompoundVname (Identifier iAST, Varname varAST, SourcePosition thePosition) {

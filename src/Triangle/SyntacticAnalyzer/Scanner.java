@@ -132,11 +132,11 @@ public final class Scanner {
       takeIt();
       return Token.DOT;
     
-    case '$':
+    case '$': // Hecho por Deyan nuevo simbolo
       takeIt();
       return Token.DENOTE;
 
-    case '|':
+    case '|': // Hecho por Deyan nuevo simbolo
       takeIt();
       return Token.OR;
 

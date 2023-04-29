@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class SequentialDeclaration extends Declaration {
 
   public SequentialDeclaration (Declaration d1AST, Declaration d2AST,

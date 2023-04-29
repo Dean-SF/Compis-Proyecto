@@ -163,6 +163,13 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// parseProgram hecho por Deyan
+/*
+ * Principales cambios:
+ * Ahora se busca por packages a inicio de un programa
+ * Si no hay se crea un SimpleProgram, pero en caso que haya
+ * entonces se crea un CompoundProgram
+ */
 public Program parseProgram() {
  
   Program programAST = null;
@@ -191,6 +198,11 @@ public Program parseProgram() {
   return programAST;
 }
 
+// parsePackage hecho por Deyan
+/*
+ * Parecido al parseCommand(), crea SequentialPackageDeclarations mediante
+ * Un while
+ */
 public Package parsePackage() throws SyntaxError{
   Package pAST = null;
   SourcePosition packagePos = new SourcePosition();
@@ -288,13 +300,24 @@ public Package parsePackage() throws SyntaxError{
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+  // parseLongIdentifier hecho por Deyan 
+  /*
+   * Funciona igual que el v-name antiguo (actual Var-name)
+   * se encarga de parsear un identifier e invocar a la siguiente funcion
+   */
   LongIdentifier parseLongIdentifier() throws SyntaxError {
     LongIdentifier liAST = null;
     Identifier iAST = parseIdentifier();
     liAST = parseRestOfLongIdentifier(iAST);
     return liAST;
   }
-
+  // parseRestOfLongIdentifier hecho por Deyan 
+  /*
+   * Funciona parecido al v-name antiguo (actual Var-name)
+   * esta se encarga de identifiar la otra parte del long identifier
+   * (el segundo identifier) dependiendo si hay otro o no segun 
+   * el simbolo $ se crea un Simple o un Compound LongIdentifier
+   */
   LongIdentifier parseRestOfLongIdentifier(Identifier iAST) throws SyntaxError {
     SourcePosition longIdentifierPos = new SourcePosition();
     longIdentifierPos = iAST.position;
@@ -344,7 +367,12 @@ public Package parsePackage() throws SyntaxError{
     start(commandPos);
 
     switch (currentToken.kind) {
-
+    
+    // Cambio hecho por Deyan
+    /*
+     * Evita mediante la de construccion de un LongIdentifier
+     * la confusion entre V-name y Long-Identifier
+     */
     case Token.IDENTIFIER:{
         Identifier iAST = parseIdentifier();
         LongIdentifier liAST = parseRestOfLongIdentifier(iAST);
@@ -402,7 +430,7 @@ public Package parsePackage() throws SyntaxError{
         break;
       }
       
-    
+    // Hecho por Deyan
     case Token.IF: {
       acceptIt();
       Expression eAST = parseExpression();
@@ -415,6 +443,10 @@ public Package parsePackage() throws SyntaxError{
       break;
     }
 
+    // hecho por Deyan
+    /*
+     * Repeat, tiene 5 variantes y se procura que se puedan crear todas
+     */
     case Token.REPEAT: {
       Expression eAST = null;
       Command cAST = null;
@@ -479,6 +511,10 @@ public Package parsePackage() throws SyntaxError{
       break;
     }
 
+    // hecho por Deyan
+    /* 
+     * Tiene 3 variantes
+     */
     case Token.FOR: {
       Identifier iAST = null;
       Expression e1AST, e2AST, e3AST = null;
@@ -536,6 +572,11 @@ public Package parsePackage() throws SyntaxError{
     return commandAST;
   }
 
+  // ifChainParser hecho por Deyan
+  /*
+   * Funcion recursiva para generar comandos if del tipo
+   * else if
+   */
   Command ifChainParser() throws SyntaxError {
     Command ifChainAST = null;
     SourcePosition commandPos = new SourcePosition();
@@ -761,6 +802,10 @@ public Package parsePackage() throws SyntaxError{
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+  // Hecho por Deyan
+  /*
+   * Funcion hecha para el caso especial de singleCommand y primaryExpression
+   */
   Vname parseSpecialVnameCase (LongIdentifier liAST) throws SyntaxError  {
     Vname vAST = null;
     SourcePosition vnamePos = new SourcePosition();
@@ -781,13 +826,22 @@ public Package parsePackage() throws SyntaxError{
     return vAST;
   }
 
+  // Hecho por Deyan
+  /*
+   * Igual al original
+   */
   Vname parseVname() throws SyntaxError {
     Vname vnameAST = null; // in case there's a syntactic error
     Identifier iAST = parseIdentifier();
     vnameAST = parseRestOfVname(iAST);
     return vnameAST;
-  }
+  } 
 
+  //Hecho por Deyan
+  /*
+   *  Dependiendo de si existe un $ o no va a crear un CompoundVname o
+   *  SimpleVname
+   */
   Vname parseRestOfVname(Identifier iAST) throws SyntaxError {
     SourcePosition vnamePos = new SourcePosition();
     vnamePos = iAST.position;
@@ -805,6 +859,10 @@ public Package parsePackage() throws SyntaxError{
     }
   }
 
+  //hecho por Deyan
+  /*
+   * Antiguo V-name
+   */
   Varname parseVarName () throws SyntaxError {
     Varname varnameAST = null; // in case there's a syntactic error
     Identifier iAST = parseIdentifier();
@@ -812,6 +870,10 @@ public Package parsePackage() throws SyntaxError{
     return varnameAST;
   }
 
+  //hecho por Deyan
+  /*
+   * Antiguo parseRestOfVname
+   */
   Varname parseRestOfVarName(Identifier identifierAST) throws SyntaxError {
     SourcePosition varnamePos = new SourcePosition();
     varnamePos = identifierAST.position;
@@ -841,8 +903,7 @@ public Package parsePackage() throws SyntaxError{
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//Ericka
-
+  //Ericka
   Declaration parseCompound_Declaration() throws SyntaxError{
     Declaration declarationAST = null; // in case there's a syntactic error
 
@@ -921,7 +982,9 @@ public Package parsePackage() throws SyntaxError{
         declarationAST = new ConstDeclaration(iAST, eAST, declarationPos);
       }
       break;
-
+    
+    // Hecho por Deyan
+    // Variable declarada inicializada
     case Token.VAR:
       {
         acceptIt();

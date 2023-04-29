@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class SimpleVname extends Vname {
 
   public SimpleVname (Varname varAST, SourcePosition thePosition) {

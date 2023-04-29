@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class CompoundLongIdentifier extends LongIdentifier{
 
   public CompoundLongIdentifier (Identifier i1AST, Identifier i2AST, SourcePosition thePosition) {

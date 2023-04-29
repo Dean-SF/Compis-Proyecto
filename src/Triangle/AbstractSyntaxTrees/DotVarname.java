@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class DotVarname extends Varname {
 
   public DotVarname (Varname vAST, Identifier iAST, SourcePosition thePosition) {

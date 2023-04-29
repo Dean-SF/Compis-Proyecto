@@ -16,6 +16,7 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
+// Hecho por Deyan
 public abstract class Varname extends AST {
 
   public Varname (SourcePosition thePosition) {

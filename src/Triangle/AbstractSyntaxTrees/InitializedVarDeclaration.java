@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class InitializedVarDeclaration extends Declaration {
 
   public InitializedVarDeclaration (Identifier iAST, Expression eAST,

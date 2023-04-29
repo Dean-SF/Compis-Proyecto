@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class SimpleProgram extends Program {
 
   public SimpleProgram (Command cAST, SourcePosition thePosition) {

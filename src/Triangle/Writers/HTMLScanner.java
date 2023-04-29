@@ -20,6 +20,8 @@ import Triangle.SyntacticAnalyzer.SourceFile;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 import Triangle.SyntacticAnalyzer.Token;
 
+
+// Hecho por Deyan copia del Scanner original adaptada para crear HTML
 public final class HTMLScanner {
 
   private WriterHTML writerHTML;

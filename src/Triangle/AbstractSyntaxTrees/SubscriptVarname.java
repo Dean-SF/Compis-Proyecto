@@ -15,7 +15,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class SubscriptVarname extends Varname {
 
   public SubscriptVarname (Varname vAST, Expression eAST, SourcePosition thePosition) {

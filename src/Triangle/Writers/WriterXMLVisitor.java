@@ -86,6 +86,8 @@ import Triangle.AbstractSyntaxTrees.VnameExpression;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
+// Clase extendida por Deyan
 public class WriterXMLVisitor implements Visitor {
 
     private FileWriter fileWriter;

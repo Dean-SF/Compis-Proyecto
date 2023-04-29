@@ -1,7 +1,7 @@
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+// Hecho por Deyan
 public class ForWhileCommand extends Command {
     public ForWhileCommand(Identifier iAST, Expression e1AST, Expression e2AST, Expression e3AST, Command cAST,
                               SourcePosition thePosition) {

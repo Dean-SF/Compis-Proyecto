@@ -4,6 +4,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// Hecho por Deyan
+/*
+ * Clase hecha para escribir el HTML en un string para luego exportarlo
+ */
 public class WriterHTML {
     
     private String fileName;
