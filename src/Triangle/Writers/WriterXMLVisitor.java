@@ -199,14 +199,6 @@ public class WriterXMLVisitor implements Visitor {
         return null;
     }
 
-    public Object visitRepeatDoUntilCommand(RepeatUntilCommand ast, Object obj) {
-        writeLineXML("<RepeatDoUntilCommand>");
-        ast.C.visit(this, null);
-        ast.E.visit(this, null);
-        writeLineXML("</RepeatDoUntilCommand>");
-        return null;
-    }
-
     public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object obj) {
         writeLineXML("<RepeatDoUntilCommand>");
         ast.E.visit(this, null);
