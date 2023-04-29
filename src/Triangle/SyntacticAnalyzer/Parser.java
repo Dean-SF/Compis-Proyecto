@@ -378,7 +378,6 @@ public Package parsePackage() throws SyntaxError{
             syntacticError("\"%\" cannot continue a Call or Assign command ",
             currentToken.spelling);
             break;
-          
         }
       }
       break;

@@ -92,8 +92,6 @@ public final class HTMLScanner {
       writerHTML.writeTab();
       takeIt();
       break;
-      
-      
     }
   }
 
@@ -238,7 +236,7 @@ public final class HTMLScanner {
     } else if (tok.kind == Token.INTLITERAL ||
                tok.kind == Token.CHARLITERAL) {
       writerHTML.literalWrite(tok.spelling);
-               }
+    }
     return tok;
   }
 
