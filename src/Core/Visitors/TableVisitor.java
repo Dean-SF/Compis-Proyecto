@@ -38,6 +38,7 @@ import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -444,7 +445,14 @@ public class TableVisitor implements Visitor {
     ast.P2.visit(this, null);
     
     return(null);   
-    }
+  }
+
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { 
+    ast.I.visit(this, null); 
+    ast.E.visit(this, null);
+    
+    return(null);   
+  }
 
   // </editor-fold>
 

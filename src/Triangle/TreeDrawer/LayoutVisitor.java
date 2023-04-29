@@ -52,6 +52,7 @@ import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -283,6 +284,10 @@ public class LayoutVisitor implements Visitor {
   // Sequential Package Declaration Andrea
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object obj) {
     return layoutBinary("SeqPackDecl.", ast.P1, ast.P2);
+  }
+
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast,Object obj) {
+    return layoutBinary("InitVarDecl.", ast.I, ast.E);
   }
 
   // Array Aggregates

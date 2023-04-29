@@ -1,0 +1,6 @@
+! Declaracion de variable inicializada: Caso funcional
+let
+    var x := 5
+in
+    skip
+end

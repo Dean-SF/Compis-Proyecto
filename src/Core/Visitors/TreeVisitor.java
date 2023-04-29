@@ -38,6 +38,7 @@ import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -283,6 +284,10 @@ public class TreeVisitor implements Visitor {
      */ 
     public Object visitPackageDeclaration(PackageDeclaration ast, Object obj) {
         return(createBinary("Package Declaration", ast.I, ast.D));
+    }
+
+    public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object obj) {
+        return(createBinary("Initialized Variable Declaration", ast.I, ast.E));
     }
 
     /*

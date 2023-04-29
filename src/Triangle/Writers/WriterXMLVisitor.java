@@ -34,6 +34,7 @@ import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -403,6 +404,14 @@ public class WriterXMLVisitor implements Visitor {
         ast.D1.visit(this, null);
         ast.D2.visit(this, null);
         writeLineXML("</PrivDeclaration>");
+        return null;
+    }
+
+    public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object obj) {
+        writeLineXML("<InitializedVarDeclaration>");
+        ast.I.visit(this, null);
+        ast.E.visit(this, null);
+        writeLineXML("</InitializedVarDeclaration>");
         return null;
     }
 

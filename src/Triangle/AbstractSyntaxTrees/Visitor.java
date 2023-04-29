@@ -14,7 +14,7 @@
 
 package Triangle.AbstractSyntaxTrees;
 
-public interface Visitor {
+public interface  Visitor {
 
   // Long-Identifier
   public abstract Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o);
@@ -60,6 +60,8 @@ public interface Visitor {
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
   public abstract Object visitRecDeclaration(RecDeclaration ast, Object o); //Ericka
   public abstract Object visitPrivDeclaration(PrivDeclaration ast, Object o); //Ericka
+  public abstract Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o);
+
   // Package Declaration Andrea 
   public abstract Object visitPackageDeclaration(PackageDeclaration ast, Object o);
   // Sequential Package Declaration Andrea
