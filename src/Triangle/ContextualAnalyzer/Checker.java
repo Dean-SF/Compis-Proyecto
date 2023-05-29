@@ -28,25 +28,32 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -58,22 +65,37 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RecDeclaration;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatTimesCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVarname;
+import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
+import Triangle.AbstractSyntaxTrees.SkipCommand;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.Terminal;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
@@ -84,28 +106,204 @@ import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public final class Checker implements Visitor {
+
+  //ESTAS FUNCIONES HAY QUE AGREGARLAS, SI LAS QUIEREN MOVER DONDE CORRESPONDE
+  //SON LIBRES PERO LAS PONGO ACA 
+  @Override
+  public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundLongIdentifier'");
+  }
+
+
+  @Override
+  public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleLongIdentifier'");
+  }
+
+
+  @Override
+  public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatWhileCommand'");
+  }
+
+
+  @Override
+  public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatUntilCommand'");
+  }
+
+
+  @Override
+  public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatTimesCommand'");
+  }
+
+
+  @Override
+  public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatDoWhileCommand'");
+  }
+
+
+  @Override
+  public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatDoUntilCommand'");
+  }
+
+
+  @Override
+  public Object visitForCommand(ForCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitForCommand'");
+  }
+
+
+  @Override
+  public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitForWhileCommand'");
+  }
+
+
+  @Override
+  public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitForUntilCommand'");
+  }
+
+
+  @Override
+  public Object visitRecDeclaration(RecDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRecDeclaration'");
+  }
+
+
+  @Override
+  public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitPrivDeclaration'");
+  }
+
+
+  @Override
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitInitializedVarDeclaration'");
+  }
+
+
+  @Override
+  public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitPackageDeclaration'");
+  }
+
+
+  @Override
+  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialPackageDeclaration'");
+  }
+
+
+  @Override
+  public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitProcedureProc_Funcs'");
+  }
+
+
+  @Override
+  public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitFunctionProc_Funcs'");
+  }
+
+
+  @Override
+  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialProcFuncs'");
+  }
+
+
+  @Override
+  public Object visitDotVarname(DotVarname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitDotVarname'");
+  }
+
+
+  @Override
+  public Object visitSimpleVarname(SimpleVarname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVarname'");
+  }
+
+
+  @Override
+  public Object visitSubscriptVarname(SubscriptVarname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSubscriptVarname'");
+  }
+
+
+  @Override
+  public Object visitSimpleVname(SimpleVname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVname'");
+  }
+
+
+  @Override
+  public Object visitCompoundVname(CompoundVname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundVname'");
+  }
+
+
+  @Override
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleProgram'");
+  }
+
+
+  @Override
+  public Object visitCompoundProgram(CompoundProgram ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundProgram'");
+  }
+
 
   // Commands
 
   // Always returns null. Does not use the given object.
 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
-    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
+    /*TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (!ast.V.variable)
       reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
     if (! eType.equals(vType))
-      reporter.reportError ("assignment incompatibilty", "", ast.position);
-    return null;
+      reporter.reportError ("assignment incompatibilty", "", ast.position);*/
+    return null; // esto estaba aqui
   }
 
 
   public Object visitCallCommand(CallCommand ast, Object o) {
-
+    /*
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
       reportUndeclared(ast.I);
@@ -115,11 +313,11 @@ public final class Checker implements Visitor {
       ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
     } else
       reporter.reportError("\"%\" is not a procedure identifier",
-                           ast.I.spelling, ast.I.position);
+                           ast.I.spelling, ast.I.position); */
     return null;
   }
 
-  public Object visitEmptyCommand(EmptyCommand ast, Object o) {
+  public Object visitSkipCommand(SkipCommand ast, Object o) {
     return null;
   }
 
@@ -146,13 +344,14 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  /* 
   public Object visitWhileCommand(WhileCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
     ast.C.visit(this, null);
     return null;
-  }
+  }*/
 
   // Expressions
 
@@ -197,7 +396,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitCallExpression(CallExpression ast, Object o) {
-    Declaration binding = (Declaration) ast.I.visit(this, null);
+    /*Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null) {
       reportUndeclared(ast.I);
       ast.type = StdEnvironment.errorType;
@@ -209,7 +408,7 @@ public final class Checker implements Visitor {
       ast.type = ((FuncFormalParameter) binding).T;
     } else
       reporter.reportError("\"%\" is not a function identifier",
-                           ast.I.spelling, ast.I.position);
+                           ast.I.spelling, ast.I.position);*/
     return ast.type;
   }
 
@@ -532,7 +731,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitVarActualParameter(VarActualParameter ast, Object o) {
-    FormalParameter fp = (FormalParameter) o;
+    /*FormalParameter fp = (FormalParameter) o;
 
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     if (! ast.V.variable)
@@ -543,7 +742,7 @@ public final class Checker implements Visitor {
                             ast.V.position);
     else if (! vType.equals(((VarFormalParameter) fp).T))
       reporter.reportError ("wrong type for var actual parameter", "",
-                            ast.V.position);
+                            ast.V.position);*/
     return null;
   }
 
@@ -604,7 +803,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
-    Declaration binding = (Declaration) ast.I.visit(this, null);
+    /*Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null) {
       reportUndeclared (ast.I);
       return StdEnvironment.errorType;
@@ -613,7 +812,8 @@ public final class Checker implements Visitor {
                             ast.I.spelling, ast.I.position);
       return StdEnvironment.errorType;
     }
-    return ((TypeDeclaration) binding).T;
+    return ((TypeDeclaration) binding).T;*/
+    return null; // este null lo agregue quitar si se descomenta
   }
 
   public Object visitIntTypeDenoter(IntTypeDenoter ast, Object o) {
@@ -653,10 +853,11 @@ public final class Checker implements Visitor {
   }
 
   public Object visitOperator(Operator O, Object o) {
-    Declaration binding = idTable.retrieve(O.spelling);
+    /*Declaration binding = idTable.retrieve(O.spelling);
     if (binding != null)
       O.decl = binding;
-    return binding;
+    return binding;*/
+    return null; // este null lo agregue quitar si se descomenta el resto
   }
 
   // Value-or-variable names
@@ -680,6 +881,7 @@ public final class Checker implements Visitor {
   // Returns the TypeDenoter of the Vname. Does not use the
   // given object.
 
+  /* 
   public Object visitDotVname(DotVname ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
@@ -693,7 +895,7 @@ public final class Checker implements Visitor {
                               ast.I.spelling, ast.I.position);
     }
     return ast.type;
-  }
+  }*/
 
   public Object visitSimpleVname(SimpleVarname ast, Object o) {
     ast.variable = false;
@@ -720,6 +922,7 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
+  /* 
   public Object visitSubscriptVname(SubscriptVname ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     ast.variable = ast.V.variable;
@@ -735,12 +938,12 @@ public final class Checker implements Visitor {
       }
     }
     return ast.type;
-  }
+  }*/
 
   // Programs
 
   public Object visitProgram(Program ast, Object o) {
-    ast.C.visit(this, null);
+    //ast.C.visit(this, null);
     return null;
   }
 
@@ -830,12 +1033,13 @@ public final class Checker implements Visitor {
 
   private ProcDeclaration declareStdProc (String id, FormalParameterSequence fps) {
 
-    ProcDeclaration binding;
+    /*ProcDeclaration binding;
 
     binding = new ProcDeclaration(new Identifier(id, dummyPos), fps,
                                   new EmptyCommand(dummyPos), dummyPos);
     idTable.enter(id, binding);
-    return binding;
+    return binding;*/
+    return null; // este null lo agregue quitar si se descomenta
   }
 
   // Creates a small AST to represent the "declaration" of a standard
