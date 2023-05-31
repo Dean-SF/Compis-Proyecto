@@ -1,5 +1,0 @@
-let
-	var variable : Integer
-in
-	variable := 5
-end
