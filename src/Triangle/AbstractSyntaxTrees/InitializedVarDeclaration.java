@@ -31,4 +31,5 @@ public class InitializedVarDeclaration extends Declaration {
 
   public Identifier I;
   public Expression E;
+  public TypeDenoter T; //Ericka
 }

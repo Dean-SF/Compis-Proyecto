@@ -112,6 +112,72 @@ public final class Checker implements Visitor {
 
   //ESTAS FUNCIONES HAY QUE AGREGARLAS, SI LAS QUIEREN MOVER DONDE CORRESPONDE
   //SON LIBRES PERO LAS PONGO ACA 
+
+  @Override
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) { //Ericka
+    ast.C.visit(this, null);
+    return null;
+  }
+
+  @Override
+  public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) { //Ericka
+    TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
+
+    if (!eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+
+    ast.C.visit(this, null);
+
+    return null;
+  }
+
+
+  @Override
+  public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
+
+    if (!eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+
+    ast.C.visit(this, null);
+
+    return null;
+  }
+  
+
+  @Override
+  public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
+
+    if (!eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+
+    ast.C.visit(this, null);
+
+    return null;
+  }
+
+
+  @Override
+  public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
+
+    if (!eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+
+    ast.C.visit(this, null);
+
+    return null;
+  }
+
+
+  @Override
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { //Ericka
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitInitializedVarDeclaration'");
+  }
+
+
   @Override
   public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
     // TODO Auto-generated method stub
@@ -124,21 +190,7 @@ public final class Checker implements Visitor {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'visitSimpleLongIdentifier'");
   }
-
-
-  @Override
-  public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatWhileCommand'");
-  }
-
-
-  @Override
-  public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatUntilCommand'");
-  }
-
+  
 
   @Override
   public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
@@ -146,19 +198,6 @@ public final class Checker implements Visitor {
     throw new UnsupportedOperationException("Unimplemented method 'visitRepeatTimesCommand'");
   }
 
-
-  @Override
-  public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatDoWhileCommand'");
-  }
-
-
-  @Override
-  public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatDoUntilCommand'");
-  }
 
 
   @Override
@@ -196,11 +235,7 @@ public final class Checker implements Visitor {
   }
 
 
-  @Override
-  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitInitializedVarDeclaration'");
-  }
+  
 
 
   @Override
@@ -270,13 +305,6 @@ public final class Checker implements Visitor {
   public Object visitCompoundVname(CompoundVname ast, Object o) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'visitCompoundVname'");
-  }
-
-
-  @Override
-  public Object visitSimpleProgram(SimpleProgram ast, Object o) { //Ericka
-    ast.C.visit(this, null);
-    return null;
   }
 
 
