@@ -1,0 +1,9 @@
+let
+	proc unallamada(var algoaca : Integer) ~
+		skip
+	end
+in
+	for unIdentifier := 1..1 do
+		unallamada(var unIdentifier)
+	end
+end

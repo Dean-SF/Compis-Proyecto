@@ -23,7 +23,17 @@ public class VarDeclaration extends Declaration {
     super (thePosition);
     I = iAST;
     T = tAST;
+    isControl = false;
   }
+
+  public VarDeclaration (Identifier iAST, TypeDenoter tAST, Boolean isControl,
+                         SourcePosition thePosition) {
+    super (thePosition);
+    I = iAST;
+    T = tAST;
+    this.isControl = isControl;
+  }
+
 
   public Object visit(Visitor v, Object o) {
     return v.visitVarDeclaration(this, o);
@@ -31,4 +41,5 @@ public class VarDeclaration extends Declaration {
 
   public Identifier I;
   public TypeDenoter T;
+  public boolean isControl;
 }

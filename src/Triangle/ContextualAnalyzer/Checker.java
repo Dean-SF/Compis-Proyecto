@@ -59,6 +59,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LongIdentifier;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -187,23 +188,38 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleLongIdentifier'");
+    return ast.I.visit(this, null);
   }
   
 
   @Override
   public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatTimesCommand'");
+    TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
+    if (!eType.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E.position);
+    
+    ast.C.visit(this, null);
+
+    return null;
   }
 
 
 
   @Override
   public Object visitForCommand(ForCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitForCommand'");
+    TypeDenoter e1Type = (TypeDenoter)ast.E1.visit(this, null);
+    TypeDenoter e2Type = (TypeDenoter)ast.E2.visit(this, null);
+    if(!e1Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E1.position);
+    if(!e2Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E2.position);
+
+    idTable.openScope();
+    ast.I.decl = new VarDeclaration(ast.I, new IntTypeDenoter(dummyPos), true, ast.position);
+    idTable.enter(ast.I.spelling, (Declaration) ast.I.decl);
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
   }
 
 
@@ -254,8 +270,15 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitProcedureProc_Funcs'");
+    idTable.enter(ast.I.spelling, ast);
+    if(ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+    idTable.openScope();
+    ast.FPS.visit(this,null);
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
   }
 
 
@@ -272,32 +295,10 @@ public final class Checker implements Visitor {
     throw new UnsupportedOperationException("Unimplemented method 'visitSequentialProcFuncs'");
   }
 
-
-  @Override
-  public Object visitDotVarname(DotVarname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitDotVarname'");
-  }
-
-
-  @Override
-  public Object visitSimpleVarname(SimpleVarname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVarname'");
-  }
-
-
-  @Override
-  public Object visitSubscriptVarname(SubscriptVarname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSubscriptVarname'");
-  }
-
-
   @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVname'");
+    ast.variable = ast.VAR.variable;
+    return ast.VAR.visit(this, null);
   }
 
 
@@ -320,28 +321,35 @@ public final class Checker implements Visitor {
   // Always returns null. Does not use the given object.
 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
-    /*TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
+    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (!ast.V.variable)
-      reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
+      reporter.reportError ("LHS of assignment is not an assignable variable", "", ast.V.position);
     if (! eType.equals(vType))
-      reporter.reportError ("assignment incompatibilty", "", ast.position);*/
-    return null; // esto estaba aqui
+      reporter.reportError ("assignment incompatibilty", "", ast.position);
+    return null;
   }
 
-
+  // revisar
   public Object visitCallCommand(CallCommand ast, Object o) {
-    /*
-    Declaration binding = (Declaration) ast.I.visit(this, null);
+    
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
     if (binding == null)
-      reportUndeclared(ast.I);
-    else if (binding instanceof ProcDeclaration) {
-      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
+      reportUndeclared(ast.LI);
+    else if (binding instanceof ProcedureProc_Funcs) {
+      ast.APS.visit(this, ((ProcedureProc_Funcs) binding).FPS);
     } else if (binding instanceof ProcFormalParameter) {
       ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
     } else
-      reporter.reportError("\"%\" is not a procedure identifier",
-                           ast.I.spelling, ast.I.position); */
+      if(ast.LI instanceof SimpleLongIdentifier) {
+        SimpleLongIdentifier SLI = (SimpleLongIdentifier) ast.LI;
+        reporter.reportError("\"%\" is not a procedure identifier",
+                           SLI.I.spelling, SLI.I.position);
+      } else if(ast.LI instanceof CompoundLongIdentifier) {
+        CompoundLongIdentifier CLI = (CompoundLongIdentifier) ast.LI;
+        reporter.reportError("\"%\" is not a procedure identifier",
+                           CLI.I1.spelling + " $ " + CLI.I1.spelling, CLI.position);
+      }
     return null;
   }
 
@@ -759,18 +767,18 @@ public final class Checker implements Visitor {
   }
 
   public Object visitVarActualParameter(VarActualParameter ast, Object o) {
-    /*FormalParameter fp = (FormalParameter) o;
+    FormalParameter fp = (FormalParameter) o;
 
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     if (! ast.V.variable)
-      reporter.reportError ("actual parameter is not a variable", "",
+      reporter.reportError ("actual parameter is not an assignable variable", "",
                             ast.V.position);
     else if (! (fp instanceof VarFormalParameter))
       reporter.reportError ("var actual parameter not expected here", "",
                             ast.V.position);
     else if (! vType.equals(((VarFormalParameter) fp).T))
       reporter.reportError ("wrong type for var actual parameter", "",
-                            ast.V.position);*/
+                            ast.V.position);
     return null;
   }
 
@@ -831,17 +839,23 @@ public final class Checker implements Visitor {
   }
 
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
-    /*Declaration binding = (Declaration) ast.I.visit(this, null);
+    Declaration binding = (Declaration) ast.L.visit(this, null);
     if (binding == null) {
-      reportUndeclared (ast.I);
+      reportUndeclared (ast.L);
       return StdEnvironment.errorType;
     } else if (! (binding instanceof TypeDeclaration)) {
-      reporter.reportError ("\"%\" is not a type identifier",
-                            ast.I.spelling, ast.I.position);
+      if(ast.L instanceof SimpleLongIdentifier) {
+        SimpleLongIdentifier SLI = (SimpleLongIdentifier) ast.L;
+        reporter.reportError("\"%\" is not a type identifier",
+                           SLI.I.spelling, SLI.I.position);
+      } else if(ast.L instanceof CompoundLongIdentifier) {
+        CompoundLongIdentifier CLI = (CompoundLongIdentifier) ast.L;
+        reporter.reportError("\"%\" is not a type identifier",
+                           CLI.I1.spelling + " $ " + CLI.I1.spelling, CLI.position);
+      }
       return StdEnvironment.errorType;
     }
-    return ((TypeDeclaration) binding).T;*/
-    return null; // este null lo agregue quitar si se descomenta
+    return ((TypeDeclaration) binding).T;
   }
 
   public Object visitIntTypeDenoter(IntTypeDenoter ast, Object o) {
@@ -881,11 +895,10 @@ public final class Checker implements Visitor {
   }
 
   public Object visitOperator(Operator O, Object o) {
-    /*Declaration binding = idTable.retrieve(O.spelling);
+    Declaration binding = idTable.retrieve(O.spelling);
     if (binding != null)
       O.decl = binding;
-    return binding;*/
-    return null; // este null lo agregue quitar si se descomenta el resto
+    return binding;
   }
 
   // Value-or-variable names
@@ -909,8 +922,8 @@ public final class Checker implements Visitor {
   // Returns the TypeDenoter of the Vname. Does not use the
   // given object.
 
-  /* 
-  public Object visitDotVname(DotVname ast, Object o) {
+  
+  public Object visitDotVarname(DotVarname ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     ast.variable = ast.V.variable;
@@ -923,9 +936,9 @@ public final class Checker implements Visitor {
                               ast.I.spelling, ast.I.position);
     }
     return ast.type;
-  }*/
+  }
 
-  public Object visitSimpleVname(SimpleVarname ast, Object o) {
+  public Object visitSimpleVarname(SimpleVarname ast, Object o) {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
     Declaration binding = (Declaration) ast.I.visit(this, null);
@@ -937,7 +950,10 @@ public final class Checker implements Visitor {
         ast.variable = false;
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
-        ast.variable = true;
+        if(((VarDeclaration) binding).isControl)
+          ast.variable = false;
+        else
+          ast.variable = true;
       } else if (binding instanceof ConstFormalParameter) {
         ast.type = ((ConstFormalParameter) binding).T;
         ast.variable = false;
@@ -950,8 +966,7 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
-  /* 
-  public Object visitSubscriptVname(SubscriptVname ast, Object o) {
+  public Object visitSubscriptVarname(SubscriptVarname ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     ast.variable = ast.V.variable;
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
@@ -966,7 +981,7 @@ public final class Checker implements Visitor {
       }
     }
     return ast.type;
-  }*/
+  }
 
   // Programs
 
@@ -1005,6 +1020,18 @@ public final class Checker implements Visitor {
 
   private void reportUndeclared (Terminal leaf) {
     reporter.reportError("\"%\" is not declared", leaf.spelling, leaf.position);
+  }
+
+  private void reportUndeclared (LongIdentifier leaf) {
+    if(leaf instanceof SimpleLongIdentifier) {
+      SimpleLongIdentifier simpleLeaf = (SimpleLongIdentifier) leaf;
+      reporter.reportError("\"%\" is not declared", simpleLeaf.I.spelling, simpleLeaf.I.position);
+    }else if(leaf instanceof CompoundLongIdentifier) {
+      CompoundLongIdentifier compoundLeaf = (CompoundLongIdentifier) leaf;
+      String compoundSpelling = compoundLeaf.I1.spelling + " $ " + compoundLeaf.I2.spelling;
+      reporter.reportError("\"%\" is not declared", compoundSpelling, compoundLeaf.position);
+    }
+    
   }
 
 

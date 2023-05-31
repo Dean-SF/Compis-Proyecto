@@ -21,5 +21,7 @@ public abstract class Vname extends AST {
 
   public Vname (SourcePosition thePosition) {
     super (thePosition);
+    variable = false;
   }
+  public boolean variable;
 }
