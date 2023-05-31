@@ -297,8 +297,9 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
+    TypeDenoter varType = (TypeDenoter) ast.VAR.visit(this, null);
     ast.variable = ast.VAR.variable;
-    return ast.VAR.visit(this, null);
+    return varType;
   }
 
 
@@ -950,9 +951,7 @@ public final class Checker implements Visitor {
         ast.variable = false;
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
-        if(((VarDeclaration) binding).isControl)
-          ast.variable = false;
-        else
+        if(!((VarDeclaration) binding).isControl)
           ast.variable = true;
       } else if (binding instanceof ConstFormalParameter) {
         ast.type = ((ConstFormalParameter) binding).T;

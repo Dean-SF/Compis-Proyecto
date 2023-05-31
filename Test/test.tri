@@ -1,5 +1,7 @@
 let
 	var variable : Integer
 in
-	variable := 5
+	for algo := 1..1 do
+		algo := 5
+	end
 end
