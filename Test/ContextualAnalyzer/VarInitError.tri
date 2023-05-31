@@ -1,0 +1,6 @@
+let
+	var x : Integer; 
+	var x := 9	!Error porque ya hay una "x" inicializada
+in
+	x := 5
+end
