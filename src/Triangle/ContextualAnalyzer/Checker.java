@@ -274,9 +274,9 @@ public final class Checker implements Visitor {
 
 
   @Override
-  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleProgram'");
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) { //Ericka
+    ast.C.visit(this, null);
+    return null;
   }
 
 
