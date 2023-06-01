@@ -1,0 +1,4 @@
+! For while command: Se detecta Id en exp3
+for  n := 0 .. 5 while n < 10 do
+    skip
+end

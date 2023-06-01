@@ -1,0 +1,4 @@
+! For until command: Se detecta Id en exp3
+for  n := 0 .. 5 until n < 10 do
+    skip
+end

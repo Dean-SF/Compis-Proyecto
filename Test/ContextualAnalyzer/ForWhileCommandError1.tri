@@ -1,0 +1,4 @@
+! For while command: Se detecta exp3 no es booleano
+for  n := 0 .. 5 while 10 do
+    skip
+end

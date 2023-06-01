@@ -228,15 +228,44 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitForWhileCommand'");
+    TypeDenoter e1Type = (TypeDenoter)ast.E1.visit(this, null);
+    TypeDenoter e2Type = (TypeDenoter)ast.E2.visit(this, null);
+    if(!e1Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E1.position);
+    if(!e2Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E2.position);
+
+    idTable.openScope();
+    ast.I.decl = new VarDeclaration(ast.I, new IntTypeDenoter(dummyPos), true, ast.position);
+    idTable.enter(ast.I.spelling, (Declaration) ast.I.decl);
+    TypeDenoter e3Type = (TypeDenoter)ast.E3.visit(this, null);
+    if(!e3Type.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E3.position);
+    
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
   }
 
 
   @Override
   public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitForUntilCommand'");
+    TypeDenoter e1Type = (TypeDenoter)ast.E1.visit(this, null);
+    TypeDenoter e2Type = (TypeDenoter)ast.E2.visit(this, null);
+    if(!e1Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E1.position);
+    if(!e2Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E2.position);
+
+    idTable.openScope();
+    ast.I.decl = new VarDeclaration(ast.I, new IntTypeDenoter(dummyPos), true, ast.position);
+    idTable.enter(ast.I.spelling, (Declaration) ast.I.decl);
+    TypeDenoter e3Type = (TypeDenoter)ast.E3.visit(this, null);
+    if(!e3Type.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E3.position);
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
   }
 
 
@@ -440,7 +469,13 @@ public final class Checker implements Visitor {
     if (binding == null) {
       reportUndeclared(ast.I);
       ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
+    } else if (binding instanceof FuncDeclaration) {let
+	proc hola (var si : Integer, var si : Char) ~
+		si := 5
+	end
+in
+	si := 5
+end
       ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
       ast.type = ((FuncDeclaration) binding).T;
     } else if (binding instanceof FuncFormalParameter) {
@@ -581,7 +616,6 @@ public final class Checker implements Visitor {
   public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) {
     return null;
   }
-
   public Object visitVarDeclaration(VarDeclaration ast, Object o) {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
     idTable.enter (ast.I.spelling, ast);
