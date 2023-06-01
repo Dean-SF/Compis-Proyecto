@@ -1,0 +1,8 @@
+let
+  var x := 1 
+in
+  repeat do
+    skip
+  while x < 5
+  end
+end

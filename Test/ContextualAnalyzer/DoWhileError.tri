@@ -1,7 +1,0 @@
-repeat do
-
-    putint(1) 
-
-  while 'x' ! condición no booleana 
-
-end
