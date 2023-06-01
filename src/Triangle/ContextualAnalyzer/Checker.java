@@ -946,8 +946,10 @@ public final class Checker implements Visitor {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
     Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null)
+    if (binding == null) {
+      ast.variable = true;
       reportUndeclared(ast.I);
+    }
     else
       if (binding instanceof ConstDeclaration) {
         ast.type = ((ConstDeclaration) binding).E.type;

@@ -1,0 +1,7 @@
+let
+	proc hola (var si : Integer, var si : Char) ~
+		si := 5
+	end
+in
+	skip
+end
