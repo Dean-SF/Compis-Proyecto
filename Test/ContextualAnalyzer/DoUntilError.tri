@@ -1,7 +1,0 @@
-repeat do
-
-    putint (1) 
-
-  until 13 ! condición no booleana 
-
-end

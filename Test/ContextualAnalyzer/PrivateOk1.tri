@@ -1,0 +1,15 @@
+let
+  private
+    var a : Integer
+  in
+    var b : Integer;
+    private
+	var a : Integer
+    in
+        var z : Integer
+    end
+  end
+in
+  b := 5;
+  z := 3
+end

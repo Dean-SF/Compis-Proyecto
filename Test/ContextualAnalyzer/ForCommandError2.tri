@@ -1,0 +1,4 @@
+! For Command: intentar asignar a la variable de control
+for unIdentifier := 1..1 do
+	unIdentifier := 5
+end

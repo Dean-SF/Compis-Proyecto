@@ -21,7 +21,8 @@ public class IdEntry {
   protected String id;
   protected Declaration attr;
   protected int level;
-  protected IdEntry previous;
+  public IdEntry previous;
+
 
   IdEntry (String id, Declaration attr, int level, IdEntry previous) {
     this.id = id;

@@ -6,5 +6,4 @@ in
   while a > b do
 	skip
   end
-
 end

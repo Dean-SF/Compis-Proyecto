@@ -1,0 +1,6 @@
+let
+	var x : Integer; 
+	var x := 9	
+in
+	skip
+end

@@ -278,12 +278,13 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitPrivDeclaration'");
+    idTable.openScope();
+    ast.D1.visit(this, null);
+    idTable.openScope();
+    ast.D2.visit(this, null);
+    idTable.privCloseScope();
+    return null;
   }
-
-
-  
 
 
   @Override
@@ -990,7 +991,9 @@ end
         ast.variable = false;
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
-        if(!((VarDeclaration) binding).isControl)
+        if(((VarDeclaration) binding).isControl)
+          ast.variable = false;
+        else
           ast.variable = true;
       } else if (binding instanceof ConstFormalParameter) {
         ast.type = ((ConstFormalParameter) binding).T;
