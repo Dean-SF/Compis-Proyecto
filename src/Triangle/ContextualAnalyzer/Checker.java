@@ -249,11 +249,27 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitPrivDeclaration'");
+    idTable.openPrivateScope();
+    if (ast.D1 instanceof PrivDeclaration){
+      visitPrivDeclarationAuxiliar((PrivDeclaration)ast.D1,null);
+    }else {
+        ast.D1.visit(this,null);
+    }
+    idTable.closePrivateScope();
+    ast.D2.visit(this,null);
+    idTable.clearPrivateScope();
+    if (ast.D1 instanceof PrivDeclaration){
+        idTable.clearPrivateScope();
+    }
+    
+    return null;
   }
 
-
+  public Object visitPrivDeclarationAuxiliar(PrivDeclaration ast, Object o){
+    ast.D1.visit(this, null);
+    ast.D2.visit(this, null);
+    return null;
+}
   
 
 
@@ -300,9 +316,8 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
-    TypeDenoter varType = (TypeDenoter) ast.VAR.visit(this, null);
     ast.variable = ast.VAR.variable;
-    return varType;
+    return ast.VAR.visit(this, null);
   }
 
 
@@ -954,7 +969,9 @@ public final class Checker implements Visitor {
         ast.variable = false;
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
-        if(!((VarDeclaration) binding).isControl)
+        if(((VarDeclaration) binding).isControl)
+          ast.variable = false;
+        else
           ast.variable = true;
       } else if (binding instanceof ConstFormalParameter) {
         ast.type = ((ConstFormalParameter) binding).T;

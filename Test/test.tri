@@ -1,7 +1,1 @@
-let
-	var variable : Integer
-in
-	for algo := 1..1 do
-		algo := 5
-	end
-end
+

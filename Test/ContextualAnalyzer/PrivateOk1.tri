@@ -1,0 +1,17 @@
+let
+  private
+    const a ~ 1
+  in
+    private
+      const b ~ a + 1
+    in
+      const c ~ b + a 
+    end
+    ;
+    const d ~ a + c 
+  end
+
+in
+  skip
+
+end

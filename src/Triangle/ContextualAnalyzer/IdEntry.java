@@ -22,12 +22,14 @@ public class IdEntry {
   protected Declaration attr;
   protected int level;
   protected IdEntry previous;
+  protected boolean localLevel; //Ericka
 
-  IdEntry (String id, Declaration attr, int level, IdEntry previous) {
+  IdEntry (String id, Declaration attr, int level, IdEntry previous, boolean localLevel) {
     this.id = id;
     this.attr = attr;
     this.level = level;
     this.previous = previous;
+    this.localLevel = localLevel; //Ericka
   }
 
 }
