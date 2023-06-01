@@ -249,28 +249,13 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
-    idTable.openPrivateScope();
-    if (ast.D1 instanceof PrivDeclaration){
-      visitPrivDeclarationAuxiliar((PrivDeclaration)ast.D1,null);
-    }else {
-        ast.D1.visit(this,null);
-    }
-    idTable.closePrivateScope();
-    ast.D2.visit(this,null);
-    idTable.clearPrivateScope();
-    if (ast.D1 instanceof PrivDeclaration){
-        idTable.clearPrivateScope();
-    }
-    
+    idTable.openScope();
+    ast.D1.visit(this, null);
+    idTable.openScope();
+    ast.D2.visit(this, null);
+    idTable.privCloseScope();
     return null;
   }
-
-  public Object visitPrivDeclarationAuxiliar(PrivDeclaration ast, Object o){
-    ast.D1.visit(this, null);
-    ast.D2.visit(this, null);
-    return null;
-}
-  
 
 
   @Override
@@ -316,8 +301,9 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
+    TypeDenoter varType = (TypeDenoter) ast.VAR.visit(this, null);
     ast.variable = ast.VAR.variable;
-    return ast.VAR.visit(this, null);
+    return varType;
   }
 
 

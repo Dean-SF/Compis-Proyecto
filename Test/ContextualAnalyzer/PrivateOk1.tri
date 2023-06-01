@@ -1,17 +1,15 @@
 let
   private
-    const a ~ 1
+    var a : Integer
   in
+    var b : Integer;
     private
-      const b ~ a + 1
+	var a : Integer
     in
-      const c ~ b + a 
+        var z : Integer
     end
-    ;
-    const d ~ a + c 
   end
-
 in
-  skip
-
+  b := 5;
+  z := 3
 end

@@ -20,7 +20,6 @@ public final class IdentificationTable {
 
   private int level;
   private IdEntry latest;
-  protected boolean localScope = false; //Ericka
 
   public IdentificationTable () {
     level = 0;
@@ -52,6 +51,25 @@ public final class IdentificationTable {
     this.latest = entry;
   }
 
+  public void privCloseScope () {
+    IdEntry entry = null, local = null, privateScope = null;
+    
+    // Presumably, idTable.level > 0.
+    entry = this.latest;
+    while (entry.level == this.level) {
+      local = entry;
+      local.level -= 2;
+      entry = local.previous;
+    }
+    this.level--;
+    while (entry.level == this.level) {
+      privateScope = entry;
+      entry = privateScope.previous;
+    }
+    local.previous = entry;
+    this.level--;
+  }
+
   // Makes a new entry in the identification table for the given identifier
   // and attribute. The new entry belongs to the current level.
   // duplicated is set to to true iff there is already an entry for the
@@ -75,12 +93,7 @@ public final class IdentificationTable {
 
     attr.duplicated = present;
     // Add new entry ...
-    if (localScope){
-      entry = new IdEntry(id, attr, this.level, this.latest, true);
-    }else {
-        entry = new IdEntry(id, attr, this.level, this.latest, false);
-    }
-    
+    entry = new IdEntry(id, attr, this.level, this.latest);
     this.latest = entry;
   }
 
@@ -109,28 +122,6 @@ public final class IdentificationTable {
     }
 
     return attr;
-  }
-
-  //Ericka
-  public void closePrivateScope(){
-      this.localScope = false;
-  }
-  public void openPrivateScope(){
-      this.localScope = true;
-  }
-
-  public void clearPrivateScope() {
-      IdEntry entry, local, localDcl;
-      entry = this.latest;
-      localDcl = this.latest.previous;
-
-      while (localDcl.localLevel != true) {
-          local = entry;
-          entry = local.previous;
-          localDcl = local.previous;
-      }
-      entry.previous  = localDcl.previous;
-      this.latest = entry;
   }
 
 }
