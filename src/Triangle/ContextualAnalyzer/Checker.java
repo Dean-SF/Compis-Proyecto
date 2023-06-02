@@ -184,8 +184,11 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundLongIdentifier'");
+    if(!idTable.enterContext(ast.I1.spelling))
+      reporter.reportError ("Package \"%\" is not declared",ast.I1.spelling, ast.I1.position);
+    Declaration varBiding = (Declaration) ast.I2.visit(this, null);
+    idTable.restoreContext();
+    return varBiding;
   }
 
 
@@ -289,15 +292,22 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitPackageDeclaration'");
+    if(!idTable.createContext(ast.I.spelling)) {
+      reporter.reportError ("Package \"%\" already declared",
+                            ast.I.spelling, ast.I.position);
+    }
+    idTable.enterContext(ast.I.spelling);
+    ast.D.visit(this, null);
+    idTable.restoreContext();
+    return null;
   }
 
 
   @Override
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialPackageDeclaration'");
+    ast.P1.visit(this, null);
+    ast.P2.visit(this, null);
+    return null;
   }
 
 
@@ -314,18 +324,29 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
   @Override
   public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitFunctionProc_Funcs'");
+    ast.T = (TypeDenoter) ast.T.visit(this, null);
+    idTable.enter (ast.I.spelling, ast); // permits recursion
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+    idTable.openScope();
+    ast.FPS.visit(this, null);
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    idTable.closeScope();
+    if (! ast.T.equals(eType))
+      reporter.reportError ("body of function \"%\" has wrong type",
+                            ast.I.spelling, ast.E.position);
+    return null;
   }
 
 
   @Override
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialProcFuncs'");
+    ast.PF1.visit(this, null);
+    ast.PF2.visit(this, null);
+    return null;
   }
 
   @Override
@@ -338,15 +359,20 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitCompoundVname(CompoundVname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundVname'");
+    if(!idTable.enterContext(ast.I.spelling));
+      reporter.reportError ("Package \"%\" is not declared",ast.I.spelling, ast.I.position);
+    TypeDenoter varType = (TypeDenoter) ast.VAR.visit(this, null);
+    ast.variable = ast.VAR.variable;
+    idTable.restoreContext();
+    return varType;
   }
 
 
   @Override
   public Object visitCompoundProgram(CompoundProgram ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundProgram'");
+    ast.P.visit(this, null);
+    ast.C.visit(this, null);
+    return null;
   }
 
 
@@ -414,15 +440,6 @@ public final class Checker implements Visitor {
     return null;
   }
 
-  /* 
-  public Object visitWhileCommand(WhileCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (! eType.equals(StdEnvironment.booleanType))
-      reporter.reportError("Boolean expression expected here", "", ast.E.position);
-    ast.C.visit(this, null);
-    return null;
-  }*/
-
   // Expressions
 
   // Returns the TypeDenoter denoting the type of the expression. Does
@@ -466,25 +483,25 @@ public final class Checker implements Visitor {
   }
 
   public Object visitCallExpression(CallExpression ast, Object o) {
-    /*Declaration binding = (Declaration) ast.I.visit(this, null);
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
     if (binding == null) {
-      reportUndeclared(ast.I);
+      reportUndeclared(ast.LI);
       ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {let
-	proc hola (var si : Integer, var si : Char) ~
-		si := 5
-	end
-in
-	si := 5
-end
+    } else if (binding instanceof FuncDeclaration) {
       ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
       ast.type = ((FuncDeclaration) binding).T;
     } else if (binding instanceof FuncFormalParameter) {
       ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
       ast.type = ((FuncFormalParameter) binding).T;
-    } else
+    } else if(ast.LI instanceof SimpleLongIdentifier) {
+      SimpleLongIdentifier SLI = (SimpleLongIdentifier) ast.LI;
       reporter.reportError("\"%\" is not a function identifier",
-                           ast.I.spelling, ast.I.position);*/
+                        SLI.I.spelling, SLI.I.position);
+    } else if(ast.LI instanceof CompoundLongIdentifier) {
+      CompoundLongIdentifier CLI = (CompoundLongIdentifier) ast.LI;
+      reporter.reportError("\"%\" is not a function identifier",
+                        CLI.I1.spelling + " $ " + CLI.I1.spelling, CLI.position);
+    }
     return ast.type;
   }
 
@@ -1029,11 +1046,6 @@ end
 
   // Programs
 
-  public Object visitProgram(Program ast, Object o) {
-    //ast.C.visit(this, null);
-    return null;
-  }
-
   // Checks whether the source program, represented by its AST, satisfies the
   // language's scope rules and type rules.
   // Also decorates the AST as follows:
@@ -1051,11 +1063,11 @@ end
 
   public Checker (ErrorReporter reporter) {
     this.reporter = reporter;
-    this.idTable = new IdentificationTable ();
+    this.idTable = new ContextChangingIdTable ();
     establishStdEnvironment();
   }
 
-  private IdentificationTable idTable;
+  private ContextChangingIdTable idTable;
   private static SourcePosition dummyPos = new SourcePosition();
   private ErrorReporter reporter;
 
@@ -1132,13 +1144,13 @@ end
 
   private ProcDeclaration declareStdProc (String id, FormalParameterSequence fps) {
 
-    /*ProcDeclaration binding;
+    ProcDeclaration binding;
 
     binding = new ProcDeclaration(new Identifier(id, dummyPos), fps,
-                                  new EmptyCommand(dummyPos), dummyPos);
+                                  new SkipCommand(dummyPos), dummyPos);
+                                  
     idTable.enter(id, binding);
-    return binding;*/
-    return null; // este null lo agregue quitar si se descomenta
+    return binding;
   }
 
   // Creates a small AST to represent the "declaration" of a standard
@@ -1239,6 +1251,7 @@ end
     StdEnvironment.puteolDecl = declareStdProc("puteol", new EmptyFormalParameterSequence(dummyPos));
     StdEnvironment.equalDecl = declareStdBinaryOp("=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
     StdEnvironment.unequalDecl = declareStdBinaryOp("\\=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
+    idTable.saveStdEnvironmentLatestEntry();
 
   }
 }

@@ -1,0 +1,19 @@
+! Packages: Caso funcional, solo 1 package
+package myPackage ~
+    var myVar : Integer;
+    proc unProc (var hola : Integer) ~
+        hola := 5
+    end
+end
+package myPackage2 ~
+    var myVar : Integer;
+    proc unProc (var hola : Integer) ~
+        myPackage $ unProc (var hola)
+    end
+end
+let
+    var aVar : Integer
+in
+    myPackage $ unProc (var aVar)
+end
+

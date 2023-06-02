@@ -19,11 +19,16 @@ import Triangle.AbstractSyntaxTrees.Declaration;
 public final class IdentificationTable {
 
   private int level;
-  private IdEntry latest;
+  protected IdEntry latest;
 
   public IdentificationTable () {
     level = 0;
     latest = null;
+  }
+
+  public IdentificationTable (IdEntry otherLatest) {
+    level = 0;
+    latest = otherLatest;
   }
 
   // Opens a new level in the identification table, 1 higher than the
