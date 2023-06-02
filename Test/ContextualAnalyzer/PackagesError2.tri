@@ -1,14 +1,8 @@
-! Packages: Caso funcional
+! Packages: Caso Error
 package myPackage ~
     var myVar : Integer;
     proc unProc (var hola : Integer) ~
-        hola := 5
-    end
-end
-package myPackage2 ~
-    var myVar : Integer;
-    proc unProc (var hola : Integer) ~
-        hola := 5
+        myVar := 5
     end
 end
 let

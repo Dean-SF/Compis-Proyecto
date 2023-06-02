@@ -419,7 +419,10 @@ public final class Checker implements Visitor {
   // Commands
 
   // Always returns null. Does not use the given object.
-
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Error de LHS cambiado
+   */
   public Object visitAssignCommand(AssignCommand ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);

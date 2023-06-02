@@ -1,0 +1,9 @@
+let
+    func unaFuncion (var variable : Integer) : Integer ~
+   	if variable = 5 then
+            10
+        else
+            20
+in
+    skip
+end
