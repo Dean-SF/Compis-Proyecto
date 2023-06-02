@@ -18,14 +18,17 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class VarDeclaration extends Declaration {
 
+  
   public VarDeclaration (Identifier iAST, TypeDenoter tAST,
                          SourcePosition thePosition) {
     super (thePosition);
     I = iAST;
     T = tAST;
-    isControl = false;
+    isControl = false; // Variable hecha por Deyan Sanabria
   }
-
+  /*
+   * Nuevo constructor hecho por Deyan Sanabria
+   */
   public VarDeclaration (Identifier iAST, TypeDenoter tAST, Boolean isControl,
                          SourcePosition thePosition) {
     super (thePosition);
@@ -41,5 +44,5 @@ public class VarDeclaration extends Declaration {
 
   public Identifier I;
   public TypeDenoter T;
-  public boolean isControl;
+  public boolean isControl; // Variable hecha por Deyan Sanabria
 }
