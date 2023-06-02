@@ -813,6 +813,9 @@ public final class Checker implements Visitor {
     FormalParameter fp = (FormalParameter) o;
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
 
+    if(eType == null)
+      return null;
+    
     if (! (fp instanceof ConstFormalParameter))
       reporter.reportError ("const actual parameter not expected here", "",
                             ast.position);
