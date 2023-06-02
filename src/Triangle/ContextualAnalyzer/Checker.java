@@ -184,8 +184,11 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundLongIdentifier'");
+    if(!idTable.enterContext(ast.I1.spelling))
+      reporter.reportError ("Package \"%\" is not declared",ast.I1.spelling, ast.I1.position);
+    Declaration varBiding = (Declaration) ast.I2.visit(this, null);
+    idTable.restoreContext();
+    return varBiding;
   }
 
 
@@ -289,15 +292,22 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitPackageDeclaration'");
+    if(!idTable.createContext(ast.I.spelling)) {
+      reporter.reportError ("Package \"%\" already declared",
+                            ast.I.spelling, ast.I.position);
+    }
+    idTable.enterContext(ast.I.spelling);
+    ast.D.visit(this, null);
+    idTable.restoreContext();
+    return null;
   }
 
 
   @Override
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialPackageDeclaration'");
+    ast.P1.visit(this, null);
+    ast.P2.visit(this, null);
+    return null;
   }
 
 
@@ -338,15 +348,20 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitCompoundVname(CompoundVname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundVname'");
+    if(!idTable.enterContext(ast.I.spelling))
+      reporter.reportError ("Package \"%\" is not declared",ast.I.spelling, ast.I.position);
+    TypeDenoter varType = (TypeDenoter) ast.VAR.visit(this, null);
+    ast.variable = ast.VAR.variable;
+    idTable.restoreContext();
+    return varType;
   }
 
 
   @Override
   public Object visitCompoundProgram(CompoundProgram ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundProgram'");
+    ast.P.visit(this, null);
+    ast.C.visit(this, null);
+    return null;
   }
 
 
@@ -414,15 +429,6 @@ public final class Checker implements Visitor {
     return null;
   }
 
-  /* 
-  public Object visitWhileCommand(WhileCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (! eType.equals(StdEnvironment.booleanType))
-      reporter.reportError("Boolean expression expected here", "", ast.E.position);
-    ast.C.visit(this, null);
-    return null;
-  }*/
-
   // Expressions
 
   // Returns the TypeDenoter denoting the type of the expression. Does
@@ -470,13 +476,7 @@ public final class Checker implements Visitor {
     if (binding == null) {
       reportUndeclared(ast.I);
       ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {let
-	proc hola (var si : Integer, var si : Char) ~
-		si := 5
-	end
-in
-	si := 5
-end
+    } else if (binding instanceof FuncDeclaration) {
       ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
       ast.type = ((FuncDeclaration) binding).T;
     } else if (binding instanceof FuncFormalParameter) {
@@ -1051,11 +1051,11 @@ end
 
   public Checker (ErrorReporter reporter) {
     this.reporter = reporter;
-    this.idTable = new IdentificationTable ();
+    this.idTable = new ContextChangingIdTable ();
     establishStdEnvironment();
   }
 
-  private IdentificationTable idTable;
+  private ContextChangingIdTable idTable;
   private static SourcePosition dummyPos = new SourcePosition();
   private ErrorReporter reporter;
 
@@ -1239,6 +1239,7 @@ end
     StdEnvironment.puteolDecl = declareStdProc("puteol", new EmptyFormalParameterSequence(dummyPos));
     StdEnvironment.equalDecl = declareStdBinaryOp("=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
     StdEnvironment.unequalDecl = declareStdBinaryOp("\\=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
+    idTable.saveStdEnvironmentLatestEntry();
 
   }
 }
