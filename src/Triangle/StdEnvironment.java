@@ -16,8 +16,9 @@ package Triangle;
 
 import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
-import Triangle.AbstractSyntaxTrees.FuncDeclaration;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
@@ -45,10 +46,10 @@ public final class StdEnvironment {
     addDecl, subtractDecl, multiplyDecl, divideDecl, moduloDecl,
     equalDecl, unequalDecl, lessDecl, notlessDecl, greaterDecl, notgreaterDecl;
 
-  public static ProcDeclaration
+  public static ProcedureProc_Funcs
     getDecl, putDecl, getintDecl, putintDecl, geteolDecl, puteolDecl;
 
-  public static FuncDeclaration
+  public static FunctionProc_Funcs
     chrDecl, ordDecl, eolDecl, eofDecl;
 
 }

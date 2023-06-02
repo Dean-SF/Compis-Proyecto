@@ -21,7 +21,7 @@ public class IdEntry {
   protected String id;
   protected Declaration attr;
   protected int level;
-  public IdEntry previous;
+  public IdEntry previous; // Modificado por Deyan Sanabria
 
 
   IdEntry (String id, Declaration attr, int level, IdEntry previous) {

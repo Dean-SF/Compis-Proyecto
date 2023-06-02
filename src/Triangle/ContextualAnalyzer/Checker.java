@@ -111,15 +111,18 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public final class Checker implements Visitor {
 
-  //ESTAS FUNCIONES HAY QUE AGREGARLAS, SI LAS QUIEREN MOVER DONDE CORRESPONDE
-  //SON LIBRES PERO LAS PONGO ACA 
-
+  /*
+   * Metodo hecho por Ericka desde 0
+   */
   @Override
   public Object visitSimpleProgram(SimpleProgram ast, Object o) { //Ericka
     ast.C.visit(this, null);
     return null;
   }
 
+  /*
+   * Metodo hecho por Ericka desde 0
+   */
   @Override
   public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) { //Ericka
     TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
@@ -132,7 +135,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Ericka desde 0
+   */
   @Override
   public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
@@ -145,7 +150,9 @@ public final class Checker implements Visitor {
     return null;
   }
   
-
+  /*
+   * Metodo hecho por Ericka desde 0
+   */
   @Override
   public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
@@ -158,7 +165,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Ericka desde 0
+   */
   @Override
   public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
@@ -171,7 +180,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Ericka desde 0
+   */
   @Override
   public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { //Ericka
     ast.T = (TypeDenoter)ast.E.visit(this, null);
@@ -181,7 +192,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
     if(!idTable.enterContext(ast.I1.spelling))
@@ -191,13 +204,17 @@ public final class Checker implements Visitor {
     return varBiding;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
     return ast.I.visit(this, null);
   }
   
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter)ast.E.visit(this, null);
@@ -209,8 +226,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitForCommand(ForCommand ast, Object o) {
     TypeDenoter e1Type = (TypeDenoter)ast.E1.visit(this, null);
@@ -228,7 +246,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
     TypeDenoter e1Type = (TypeDenoter)ast.E1.visit(this, null);
@@ -250,7 +270,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
     TypeDenoter e1Type = (TypeDenoter)ast.E1.visit(this, null);
@@ -287,6 +309,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
     idTable.openScope();
@@ -297,7 +322,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
     if(!idTable.createContext(ast.I.spelling)) {
@@ -310,7 +337,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
     ast.P1.visit(this, null);
@@ -318,7 +347,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
     idTable.enter(ast.I.spelling, ast);
@@ -332,6 +363,9 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
@@ -435,6 +469,19 @@ public final class Checker implements Visitor {
   }
 
 
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
+  @Override
+  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+    ast.PF1.visit(this, null);
+    ast.PF2.visit(this, null);
+    return null;
+  }
+
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
     TypeDenoter varType = (TypeDenoter) ast.VAR.visit(this, null);
@@ -442,7 +489,9 @@ public final class Checker implements Visitor {
     return varType;
   }
 
-
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   @Override
   public Object visitCompoundVname(CompoundVname ast, Object o) {
     if(!idTable.enterContext(ast.I.spelling));
@@ -465,7 +514,10 @@ public final class Checker implements Visitor {
   // Commands
 
   // Always returns null. Does not use the given object.
-
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Error de LHS cambiado
+   */
   public Object visitAssignCommand(AssignCommand ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
@@ -476,7 +528,11 @@ public final class Checker implements Visitor {
     return null;
   }
 
-  // revisar
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se agregaron instance of ProcedureProc_Funcs
+   * Se agrego errores para LongIdentifiers
+   */
   public Object visitCallCommand(CallCommand ast, Object o) {
     
     Declaration binding = (Declaration) ast.LI.visit(this, null);
@@ -499,6 +555,10 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se reemplazo el empty por el skip
+   */
   public Object visitSkipCommand(SkipCommand ast, Object o) {
     return null;
   }
@@ -568,14 +628,19 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se agregaron instance of FunctionProc_Funcs
+   * Se agrego errores para LongIdentifiers
+   */
   public Object visitCallExpression(CallExpression ast, Object o) {
     Declaration binding = (Declaration) ast.LI.visit(this, null);
     if (binding == null) {
       reportUndeclared(ast.LI);
       ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
-      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
-      ast.type = ((FuncDeclaration) binding).T;
+    } else if (binding instanceof FunctionProc_Funcs) {
+      ast.APS.visit(this, ((FunctionProc_Funcs) binding).FPS);
+      ast.type = ((FunctionProc_Funcs) binding).T;
     } else if (binding instanceof FuncFormalParameter) {
       ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
       ast.type = ((FuncFormalParameter) binding).T;
@@ -653,6 +718,9 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
+  /*
+   * Metodo hecho por Deyan Sanabria desde 0
+   */
   public Object visitVnameExpression(VnameExpression ast, Object o) {
     ast.type = (TypeDenoter) ast.V.visit(this, null);
     return ast.type;
@@ -850,13 +918,17 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio FuncDeclaration por FunctionProc_Funcs
+   */
   public Object visitFuncActualParameter(FuncActualParameter ast, Object o) {
     FormalParameter fp = (FormalParameter) o;
 
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
       reportUndeclared (ast.I);
-    else if (! (binding instanceof FuncDeclaration ||
+    else if (! (binding instanceof FunctionProc_Funcs ||
                 binding instanceof FuncFormalParameter))
       reporter.reportError ("\"%\" is not a function identifier",
                             ast.I.spelling, ast.I.position);
@@ -866,9 +938,9 @@ public final class Checker implements Visitor {
     else {
       FormalParameterSequence FPS = null;
       TypeDenoter T = null;
-      if (binding instanceof FuncDeclaration) {
-        FPS = ((FuncDeclaration) binding).FPS;
-        T = ((FuncDeclaration) binding).T;
+      if (binding instanceof FunctionProc_Funcs) {
+        FPS = ((FunctionProc_Funcs) binding).FPS;
+        T = ((FunctionProc_Funcs) binding).T;
       } else {
         FPS = ((FuncFormalParameter) binding).FPS;
         T = ((FuncFormalParameter) binding).T;
@@ -883,13 +955,17 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio ProcDeclaration por ProcedureProc_Funcs
+   */
   public Object visitProcActualParameter(ProcActualParameter ast, Object o) {
     FormalParameter fp = (FormalParameter) o;
 
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
       reportUndeclared (ast.I);
-    else if (! (binding instanceof ProcDeclaration ||
+    else if (! (binding instanceof ProcedureProc_Funcs ||
                 binding instanceof ProcFormalParameter))
       reporter.reportError ("\"%\" is not a procedure identifier",
                             ast.I.spelling, ast.I.position);
@@ -898,8 +974,8 @@ public final class Checker implements Visitor {
                             ast.position);
     else {
       FormalParameterSequence FPS = null;
-      if (binding instanceof ProcDeclaration)
-        FPS = ((ProcDeclaration) binding).FPS;
+      if (binding instanceof ProcedureProc_Funcs)
+        FPS = ((ProcedureProc_Funcs) binding).FPS;
       else
         FPS = ((ProcFormalParameter) binding).FPS;
       if (! FPS.equals(((ProcFormalParameter) fp).FPS))
@@ -981,6 +1057,10 @@ public final class Checker implements Visitor {
     return StdEnvironment.errorType;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se agrego errores para LongIdentifiers
+   */
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
     Declaration binding = (Declaration) ast.L.visit(this, null);
     if (binding == null) {
@@ -1065,7 +1145,10 @@ public final class Checker implements Visitor {
   // Returns the TypeDenoter of the Vname. Does not use the
   // given object.
 
-  
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio el nombre de visitDotVname al actual
+   */
   public Object visitDotVarname(DotVarname ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
@@ -1081,6 +1164,10 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio el nombre de visitSimpleVname al actual
+   */
   public Object visitSimpleVarname(SimpleVarname ast, Object o) {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
@@ -1114,6 +1201,10 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio el nombre de visitSubscriptVname al actual
+   */
   public Object visitSubscriptVarname(SubscriptVarname ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     ast.variable = ast.V.variable;
@@ -1165,6 +1256,9 @@ public final class Checker implements Visitor {
     reporter.reportError("\"%\" is not declared", leaf.spelling, leaf.position);
   }
 
+  /*
+   * Metodo hecho por Deyan Sanabria:
+   */
   private void reportUndeclared (LongIdentifier leaf) {
     if(leaf instanceof SimpleLongIdentifier) {
       SimpleLongIdentifier simpleLeaf = (SimpleLongIdentifier) leaf;
@@ -1229,12 +1323,16 @@ public final class Checker implements Visitor {
   // Creates a small AST to represent the "declaration" of a standard
   // type, and enters it in the identification table.
 
-  private ProcDeclaration declareStdProc (String id, FormalParameterSequence fps) {
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio ProcDeclaration por ProcedureProc_Funcs
+   */
+  private ProcedureProc_Funcs declareStdProc (String id, FormalParameterSequence fps) {
 
-    ProcDeclaration binding;
+    ProcedureProc_Funcs binding;
 
-    binding = new ProcDeclaration(new Identifier(id, dummyPos), fps,
-                                  new SkipCommand(dummyPos), dummyPos);
+    binding = new ProcedureProc_Funcs(new Identifier(id, dummyPos), fps,
+                                  new SkipCommand(dummyPos), dummyPos); // se cambio empty a skip Deyan Sanabria
                                   
     idTable.enter(id, binding);
     return binding;
@@ -1243,12 +1341,16 @@ public final class Checker implements Visitor {
   // Creates a small AST to represent the "declaration" of a standard
   // type, and enters it in the identification table.
 
-  private FuncDeclaration declareStdFunc (String id, FormalParameterSequence fps,
+  /*
+   * Metodo cambiado por Deyan Sanabria:
+   * Se cambio FuncDeclaration por FunctionProc_Funcs
+   */
+  private FunctionProc_Funcs declareStdFunc (String id, FormalParameterSequence fps,
                                           TypeDenoter resultType) {
 
-    FuncDeclaration binding;
+    FunctionProc_Funcs binding;
 
-    binding = new FuncDeclaration(new Identifier(id, dummyPos), fps, resultType,
+    binding = new FunctionProc_Funcs(new Identifier(id, dummyPos), fps, resultType,
                                   new EmptyExpression(dummyPos), dummyPos);
     idTable.enter(id, binding);
     return binding;
@@ -1342,9 +1444,4 @@ public final class Checker implements Visitor {
 
   }
 
-  @Override
-  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialProcFuncs'");
-  }
 }
