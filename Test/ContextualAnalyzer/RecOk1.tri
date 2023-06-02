@@ -11,5 +11,5 @@ rec
 end
 
 in
-  skip
+  putint (1)
 end

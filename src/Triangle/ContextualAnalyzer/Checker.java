@@ -297,13 +297,13 @@ public final class Checker implements Visitor {
   @Override
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
     if (ast.PFs instanceof SequentialProcFuncs) {
-      visitSequentialProcFuncsRec((SequentialProcFuncs) ast.PFs, o);
+      visitSequentialProcFuncsRec1((SequentialProcFuncs) ast.PFs, o);
       visitSequentialProcFuncsRec2((SequentialProcFuncs) ast.PFs, o);
     }
 
     if (ast.PFs instanceof ProcedureProc_Funcs || ast.PFs instanceof FunctionProc_Funcs) {
       enterSequentialProcFuncsId1(ast.PFs);
-      enterSequentialProcFuncsId2(ast.PFs);
+      visitSequentialProcFuncs2(ast.PFs);
     }
     
     return null;
@@ -385,7 +385,7 @@ public final class Checker implements Visitor {
 
   
   // Se llaman en el visitRecDeclaration
-  public Object visitSequentialProcFuncsRec(SequentialProcFuncs ast, Object o) {
+  public Object visitSequentialProcFuncsRec1(SequentialProcFuncs ast, Object o) {
     // Ingresar identifiers de PF1 y PF2
     enterSequentialProcFuncsId1(ast.PF1);
     enterSequentialProcFuncsId1(ast.PF2); 
@@ -394,8 +394,8 @@ public final class Checker implements Visitor {
 
   // Segunda pasada
   public Object visitSequentialProcFuncsRec2(SequentialProcFuncs ast, Object o) {
-    enterSequentialProcFuncsId2(ast.PF1);
-    enterSequentialProcFuncsId2(ast.PF2); 
+    visitSequentialProcFuncs2(ast.PF1);
+    visitSequentialProcFuncs2(ast.PF2); 
     return null;
   }
 
@@ -403,7 +403,7 @@ public final class Checker implements Visitor {
   private void enterSequentialProcFuncsId1(Declaration ast) {
     
     if (ast instanceof ProcedureProc_Funcs) { 
-      ProcDeclaration astP = (ProcDeclaration) ast;
+      ProcedureProc_Funcs astP = (ProcedureProc_Funcs) ast;
       idTable.enter(astP.I.spelling, astP); 
       
       if (astP.duplicated) {
@@ -416,7 +416,7 @@ public final class Checker implements Visitor {
       idTable.closeScope();
     }
     else if (ast instanceof FunctionProc_Funcs) {
-      FuncDeclaration astF = (FuncDeclaration) ast;
+      FunctionProc_Funcs astF = (FunctionProc_Funcs) ast;
       idTable.enter(astF.I.spelling, astF); 
       
       if (astF.duplicated) {
@@ -431,7 +431,7 @@ public final class Checker implements Visitor {
       idTable.closeScope();
     }
     else if  (ast instanceof SequentialProcFuncs) {
-      visitSequentialProcFuncsRec((SequentialProcFuncs) ast, null);
+      visitSequentialProcFuncsRec1((SequentialProcFuncs) ast, null);
     }
     else {
       reporter.reportError("Rec can only receive Proc or Func", "",ast.position);
@@ -440,7 +440,7 @@ public final class Checker implements Visitor {
   }
 
   // Segunda pasada 
-  private void enterSequentialProcFuncsId2(Declaration ast) {
+  private void visitSequentialProcFuncs2(Declaration ast) {
 
     if (ast instanceof SequentialProcFuncs) { 
       visitSequentialProcFuncsRec2((SequentialProcFuncs) ast, null);
