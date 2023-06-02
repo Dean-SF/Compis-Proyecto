@@ -293,11 +293,20 @@ public final class Checker implements Visitor {
     return null;
   }
 
-
+  // Hecho por Andrea
   @Override
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRecDeclaration'");
+    if (ast.PFs instanceof SequentialProcFuncs) {
+      visitSequentialProcFuncsRec1((SequentialProcFuncs) ast.PFs, o);
+      visitSequentialProcFuncsRec2((SequentialProcFuncs) ast.PFs, o);
+    }
+
+    if (ast.PFs instanceof ProcedureProc_Funcs || ast.PFs instanceof FunctionProc_Funcs) {
+      enterSequentialProcFuncsId1(ast.PFs);
+      visitSequentialProcFuncs2(ast.PFs);
+    }
+    
+    return null;
   }
 
   /*
@@ -373,6 +382,92 @@ public final class Checker implements Visitor {
                             ast.I.spelling, ast.E.position);
     return null;
   }
+
+  
+  // Se llaman en el visitRecDeclaration
+  public Object visitSequentialProcFuncsRec1(SequentialProcFuncs ast, Object o) {
+    // Ingresar identifiers de PF1 y PF2
+    enterSequentialProcFuncsId1(ast.PF1);
+    enterSequentialProcFuncsId1(ast.PF2); 
+    return null;
+  }
+
+  // Segunda pasada
+  public Object visitSequentialProcFuncsRec2(SequentialProcFuncs ast, Object o) {
+    visitSequentialProcFuncs2(ast.PF1);
+    visitSequentialProcFuncs2(ast.PF2); 
+    return null;
+  }
+
+  // Primera pasada 
+  private void enterSequentialProcFuncsId1(Declaration ast) {
+    
+    if (ast instanceof ProcedureProc_Funcs) { 
+      ProcedureProc_Funcs astP = (ProcedureProc_Funcs) ast;
+      idTable.enter(astP.I.spelling, astP); 
+      
+      if (astP.duplicated) {
+        reporter.reportError("identifier \"%\" already declared",
+        astP.I.spelling, astP.position);
+      }
+
+      idTable.openScope();
+      astP.FPS.visit(this, null);
+      idTable.closeScope();
+    }
+    else if (ast instanceof FunctionProc_Funcs) {
+      FunctionProc_Funcs astF = (FunctionProc_Funcs) ast;
+      idTable.enter(astF.I.spelling, astF); 
+      
+      if (astF.duplicated) {
+          reporter.reportError("identifier \"%\" already declared",
+                  astF.I.spelling, astF.position);
+      }
+
+      astF.T = (TypeDenoter) astF.T.visit(this, null);
+
+      idTable.openScope();
+      astF.FPS.visit(this, null);
+      idTable.closeScope();
+    }
+    else if  (ast instanceof SequentialProcFuncs) {
+      visitSequentialProcFuncsRec1((SequentialProcFuncs) ast, null);
+    }
+    else {
+      reporter.reportError("Rec can only receive Proc or Func", "",ast.position);
+    }
+
+  }
+
+  // Segunda pasada 
+  private void visitSequentialProcFuncs2(Declaration ast) {
+
+    if (ast instanceof SequentialProcFuncs) { 
+      visitSequentialProcFuncsRec2((SequentialProcFuncs) ast, null);
+    }
+    else if (ast instanceof ProcedureProc_Funcs) { 
+      ProcedureProc_Funcs astP = (ProcedureProc_Funcs) ast;
+      idTable.openScope();
+      astP.FPS.visit(this, null);
+      astP.C.visit(this, null);
+      idTable.closeScope();
+    }
+    else if (ast instanceof FunctionProc_Funcs) {
+      FunctionProc_Funcs astF = (FunctionProc_Funcs) ast;
+      astF.T = (TypeDenoter) astF.T.visit(this, null);
+      idTable.openScope();
+      astF.FPS.visit(this, null);
+      TypeDenoter eType = (TypeDenoter) astF.E.visit(this, null);
+      idTable.closeScope();
+      if (! astF.T.equals(eType))
+        reporter.reportError ("body of function \"%\" has wrong type",
+      astF.I.spelling, astF.E.position);
+    } else {
+      reporter.reportError("Rec can only receive Proc or Func", "",ast.position);
+    }
+
+  }
+
 
   /*
    * Metodo hecho por Deyan Sanabria desde 0
@@ -702,6 +797,7 @@ public final class Checker implements Visitor {
 
     return null;
   }
+
 
   // Array Aggregates
 
@@ -1350,4 +1446,5 @@ public final class Checker implements Visitor {
     idTable.saveStdEnvironmentLatestEntry();
 
   }
+
 }

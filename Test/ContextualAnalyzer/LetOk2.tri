@@ -1,0 +1,14 @@
+let
+
+  var a := 1 ! debe inferir que a : Integer
+
+in
+
+  let
+    const b ~ a ; ! es visible aqu�
+    var   a := b + 1 ! debe inferir que nueva a : Integer
+  in
+    skip
+  end
+
+end
