@@ -5,6 +5,10 @@ import java.util.Stack;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
 
+
+/*
+ * Clase completamente nueva hecha por Deyan Sanabria
+ */
 public class ContextChangingIdTable {
 
     private IdEntry stdEnvironmentLatestEntry;
