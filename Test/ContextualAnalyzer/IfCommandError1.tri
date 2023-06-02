@@ -1,0 +1,10 @@
+! if command: compuesto con if else if else if... else, error: la primera expresion no es booleana
+if 1 then
+    skip
+| 1>2 then
+    skip
+| 1>1 then
+    skip
+else
+    skip
+end
