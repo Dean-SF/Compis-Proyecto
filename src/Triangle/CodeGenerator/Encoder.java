@@ -36,22 +36,29 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.CompoundLongIdentifier;
+import Triangle.AbstractSyntaxTrees.CompoundProgram;
+import Triangle.AbstractSyntaxTrees.CompoundVname;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
-import Triangle.AbstractSyntaxTrees.DotVname;
+import Triangle.AbstractSyntaxTrees.DotVarname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FunctionProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -63,22 +70,37 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+import Triangle.AbstractSyntaxTrees.PrivDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcedureProc_Funcs;
 import Triangle.AbstractSyntaxTrees.Program;
+import Triangle.AbstractSyntaxTrees.RecDeclaration;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatDoUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatDoWhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatTimesCommand;
+import Triangle.AbstractSyntaxTrees.RepeatUntilCommand;
+import Triangle.AbstractSyntaxTrees.RepeatWhileCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialPackageDeclaration;
+import Triangle.AbstractSyntaxTrees.SequentialProcFuncs;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
+import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVarname;
+import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
+import Triangle.AbstractSyntaxTrees.SkipCommand;
+import Triangle.AbstractSyntaxTrees.SubscriptVarname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
@@ -88,10 +110,146 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
 
 public final class Encoder implements Visitor {
 
+  @Override
+  public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundLongIdentifier'");
+  }
+
+  @Override
+  public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleLongIdentifier'");
+  }
+
+  @Override
+  public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatWhileCommand'");
+  }
+
+  @Override
+  public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatUntilCommand'");
+  }
+
+  @Override
+  public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatTimesCommand'");
+  }
+
+  @Override
+  public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatDoWhileCommand'");
+  }
+
+  @Override
+  public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRepeatDoUntilCommand'");
+  }
+
+  @Override
+  public Object visitForCommand(ForCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitForCommand'");
+  }
+
+  @Override
+  public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitForWhileCommand'");
+  }
+
+  @Override
+  public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitForUntilCommand'");
+  }
+
+  @Override
+  public Object visitRecDeclaration(RecDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitRecDeclaration'");
+  }
+
+  @Override
+  public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitPrivDeclaration'");
+  }
+
+  @Override
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitInitializedVarDeclaration'");
+  }
+
+  @Override
+  public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitPackageDeclaration'");
+  }
+
+  @Override
+  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialPackageDeclaration'");
+  }
+
+  @Override
+  public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitProcedureProc_Funcs'");
+  }
+
+  @Override
+  public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitFunctionProc_Funcs'");
+  }
+
+  @Override
+  public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialProcFuncs'");
+  }
+
+  @Override
+  public Object visitSimpleVarname(SimpleVarname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVarname'");
+  }
+
+  @Override
+  public Object visitSimpleVname(SimpleVname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVname'");
+  }
+
+  @Override
+  public Object visitCompoundVname(CompoundVname ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundVname'");
+  }
+
+  @Override
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleProgram'");
+  }
+
+  @Override
+  public Object visitCompoundProgram(CompoundProgram ast, Object o) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundProgram'");
+  }
 
   // Commands
   public Object visitAssignCommand(AssignCommand ast, Object o) {
@@ -103,13 +261,13 @@ public final class Encoder implements Visitor {
   }
 
   public Object visitCallCommand(CallCommand ast, Object o) {
-    Frame frame = (Frame) o;
+    /*Frame frame = (Frame) o;
     Integer argsSize = (Integer) ast.APS.visit(this, frame);
-    ast.I.visit(this, new Frame(frame.level, argsSize));
-    return null;
+    ast.I.visit(this, new Frame(frame.level, argsSize));*/
+    return null; //esto estaba aqui
   }
 
-  public Object visitEmptyCommand(EmptyCommand ast, Object o) {
+  public Object visitSkipCommand(SkipCommand ast, Object o) {
     return null;
   }
 
@@ -144,6 +302,7 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /* 
   public Object visitWhileCommand(WhileCommand ast, Object o) {
     Frame frame = (Frame) o;
     int jumpAddr, loopAddr;
@@ -156,7 +315,7 @@ public final class Encoder implements Visitor {
     ast.E.visit(this, frame);
     emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
     return null;
-  }
+  }*/
 
 
   // Expressions
@@ -177,11 +336,12 @@ public final class Encoder implements Visitor {
   }
 
   public Object visitCallExpression(CallExpression ast, Object o) {
-    Frame frame = (Frame) o;
+    /*Frame frame = (Frame) o;
     Integer valSize = (Integer) ast.type.visit(this, null);
     Integer argsSize = (Integer) ast.APS.visit(this, frame);
     ast.I.visit(this, new Frame(frame.level, argsSize));
-    return valSize;
+    return valSize;*/
+    return null; //borrar esto despues
   }
 
   public Object visitCharacterExpression(CharacterExpression ast,
@@ -667,7 +827,8 @@ public final class Encoder implements Visitor {
 
 
   // Value-or-variable names
-  public Object visitDotVname(DotVname ast, Object o) {
+  /* */
+  public Object visitDotVarname(DotVarname ast, Object o) {
     Frame frame = (Frame) o;
     RuntimeEntity baseObject = (RuntimeEntity) ast.V.visit(this, frame);
     ast.offset = ast.V.offset + ((Field) ast.I.decl.entity).fieldOffset;
@@ -682,7 +843,7 @@ public final class Encoder implements Visitor {
     return ast.I.decl.entity;
   }
 
-  public Object visitSubscriptVname(SubscriptVname ast, Object o) {
+  public Object visitSubscriptVarname(SubscriptVarname ast, Object o) {
     Frame frame = (Frame) o;
     RuntimeEntity baseObject;
     int elemSize, indexSize;
@@ -714,9 +875,21 @@ public final class Encoder implements Visitor {
 
 
   // Programs
+
+  /*
+   * 
+   * 
+   * 
+   * ESTO VA SER DESPUES EL SINGLE COMMAND
+   * 
+   * 
+   * 
+   */
+
+  /* 
   public Object visitProgram(Program ast, Object o) {
     return ast.C.visit(this, o);
-  }
+  }*/
 
   public Encoder (ErrorReporter reporter) {
     this.reporter = reporter;
@@ -887,9 +1060,8 @@ public final class Encoder implements Visitor {
   // frameSize is the anticipated size of the local stack frame when
   // the constant or variable is fetched at run-time.
   // valSize is the size of the constant or variable's value.
-
   private void encodeStore(Vname V, Frame frame, int valSize) {
-
+    /* 
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
     // If indexed = true, code will have been generated to load an index value.
     if (valSize > 255) {
@@ -918,7 +1090,7 @@ public final class Encoder implements Visitor {
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
       }
       emit(Machine.STOREIop, valSize, 0, 0);
-    }
+    }*/
   }
 
   // Generates code to fetch the value of a named constant or variable
@@ -929,7 +1101,7 @@ public final class Encoder implements Visitor {
   // valSize is the size of the constant or variable's value.
 
   private void encodeFetch(Vname V, Frame frame, int valSize) {
-
+    /* 
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
     // If indexed = true, code will have been generated to load an index value.
     if (valSize > 255) {
@@ -964,7 +1136,7 @@ public final class Encoder implements Visitor {
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
       }
       emit(Machine.LOADIop, valSize, 0, 0);
-    }
+    }*/
   }
 
   // Generates code to compute and push the address of a named variable.
@@ -974,7 +1146,7 @@ public final class Encoder implements Visitor {
   // the variable is addressed at run-time.
 
   private void encodeFetchAddress (Vname V, Frame frame) {
-
+    /* 
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
     // If indexed = true, code will have been generated to load an index value.
     if (baseObject instanceof KnownAddress) {
@@ -993,6 +1165,8 @@ public final class Encoder implements Visitor {
         emit(Machine.LOADLop, 0, 0, V.offset);
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
       }
-    }
+    }*/
   }
+
+  
 }
