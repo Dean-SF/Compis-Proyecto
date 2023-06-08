@@ -107,6 +107,7 @@ import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
+import Triangle.AbstractSyntaxTrees.Varname;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
@@ -115,14 +116,13 @@ public final class Encoder implements Visitor {
 
   @Override
   public Object visitCompoundLongIdentifier(CompoundLongIdentifier ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundLongIdentifier'");
+    reporter.reportRestriction("Feature not implemented");
+    return null;
   }
 
   @Override
   public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleLongIdentifier'");
+    return ast.I.visit(this, o);
   }
 
   @Override
@@ -187,20 +187,26 @@ public final class Encoder implements Visitor {
 
   @Override
   public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitInitializedVarDeclaration'");
+    Frame frame = (Frame) o;
+
+    int extraSize = ((Integer) ast.E.visit(this, frame)).intValue(); 
+    
+    ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
+
+    writeTableDetails(ast);
+    return new Integer(extraSize);
   }
 
   @Override
   public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitPackageDeclaration'");
+    reporter.reportRestriction("Feature not implemented");
+    return null;
   }
 
   @Override
   public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialPackageDeclaration'");
+    reporter.reportRestriction("Feature not implemented");
+    return null;
   }
 
   @Override
@@ -222,33 +228,14 @@ public final class Encoder implements Visitor {
   }
 
   @Override
-  public Object visitSimpleVarname(SimpleVarname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVarname'");
-  }
-
-  @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleVname'");
+    return ast.VAR.visit(this, null);
   }
 
   @Override
   public Object visitCompoundVname(CompoundVname ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundVname'");
-  }
-
-  @Override
-  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSimpleProgram'");
-  }
-
-  @Override
-  public Object visitCompoundProgram(CompoundProgram ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitCompoundProgram'");
+    reporter.reportRestriction("Feature not implemented");
+    return null;
   }
 
   // Commands
@@ -261,10 +248,10 @@ public final class Encoder implements Visitor {
   }
 
   public Object visitCallCommand(CallCommand ast, Object o) {
-    /*Frame frame = (Frame) o;
+    Frame frame = (Frame) o;
     Integer argsSize = (Integer) ast.APS.visit(this, frame);
-    ast.I.visit(this, new Frame(frame.level, argsSize));*/
-    return null; //esto estaba aqui
+    ast.LI.visit(this, new Frame(frame.level, argsSize));
+    return null;
   }
 
   public Object visitSkipCommand(SkipCommand ast, Object o) {
@@ -837,7 +824,7 @@ public final class Encoder implements Visitor {
     return baseObject;
   }
 
-  public Object visitSimpleVname(SimpleVarname ast, Object o) {
+  public Object visitSimpleVarname(SimpleVarname ast, Object o) {
     ast.offset = 0;
     ast.indexed = false;
     return ast.I.decl.entity;
@@ -886,10 +873,28 @@ public final class Encoder implements Visitor {
    * 
    */
 
-  /* 
+  
   public Object visitProgram(Program ast, Object o) {
+    if(ast instanceof SimpleProgram) {
+      SimpleProgram program = (SimpleProgram) ast;
+      return program.C.visit(this, o);
+    } else {
+
+      return null;
+    }
+      
+  }
+
+  @Override
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
     return ast.C.visit(this, o);
-  }*/
+  }
+
+  @Override
+  public Object visitCompoundProgram(CompoundProgram ast, Object o) {
+    reporter.reportRestriction("Feature not implemented");
+    return null;
+  }
 
   public Encoder (ErrorReporter reporter) {
     this.reporter = reporter;
@@ -1060,8 +1065,8 @@ public final class Encoder implements Visitor {
   // frameSize is the anticipated size of the local stack frame when
   // the constant or variable is fetched at run-time.
   // valSize is the size of the constant or variable's value.
-  private void encodeStore(Vname V, Frame frame, int valSize) {
-    /* 
+  private void encodeStore(Vname vname, Frame frame, int valSize) {
+    Varname V = vnameToVarname(vname); 
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
     // If indexed = true, code will have been generated to load an index value.
     if (valSize > 255) {
@@ -1090,7 +1095,7 @@ public final class Encoder implements Visitor {
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
       }
       emit(Machine.STOREIop, valSize, 0, 0);
-    }*/
+    }
   }
 
   // Generates code to fetch the value of a named constant or variable
@@ -1100,8 +1105,8 @@ public final class Encoder implements Visitor {
   // the constant or variable is fetched at run-time.
   // valSize is the size of the constant or variable's value.
 
-  private void encodeFetch(Vname V, Frame frame, int valSize) {
-    /* 
+  private void encodeFetch(Vname vname, Frame frame, int valSize) {
+    Varname V = vnameToVarname(vname);
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
     // If indexed = true, code will have been generated to load an index value.
     if (valSize > 255) {
@@ -1136,7 +1141,7 @@ public final class Encoder implements Visitor {
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
       }
       emit(Machine.LOADIop, valSize, 0, 0);
-    }*/
+    }
   }
 
   // Generates code to compute and push the address of a named variable.
@@ -1145,8 +1150,8 @@ public final class Encoder implements Visitor {
   // frameSize is the anticipated size of the local stack frame when
   // the variable is addressed at run-time.
 
-  private void encodeFetchAddress (Vname V, Frame frame) {
-    /* 
+  private void encodeFetchAddress (Vname vname, Frame frame) {
+    Varname V = vnameToVarname(vname);
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
     // If indexed = true, code will have been generated to load an index value.
     if (baseObject instanceof KnownAddress) {
@@ -1165,7 +1170,16 @@ public final class Encoder implements Visitor {
         emit(Machine.LOADLop, 0, 0, V.offset);
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
       }
-    }*/
+    }
+  }
+
+  private Varname vnameToVarname(Vname v) {
+    if(v instanceof SimpleVname) {
+      return ((SimpleVname) v).VAR;
+    } else {
+      reporter.reportRestriction("CompoundVname not implemented");
+      return null;
+    }
   }
 
   

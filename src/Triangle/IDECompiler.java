@@ -58,27 +58,27 @@ public class IDECompiler {
         boolean success = false;
         
         rootAST = parser.parseProgram();
-        success = rootAST != null;
+        //success = rootAST != null;
         
         // se activa el analizador sintactico
         if (report.numErrors == 0) {
             System.out.println("Contextual Analysis ...");
             Checker checker = new Checker(report);
             checker.check(rootAST);
-            if (report.numErrors == 0)
+            /*if (report.numErrors == 0)
                 success = true;
             else
-                success = false;
-            /*if (report.numErrors == 0) {
+                success = false;*/
+            if (report.numErrors == 0) {
                 System.out.println("Code Generation ...");
                 Encoder encoder = new Encoder(report);
-                encoder.encodeRun(rootAST, false);
+                encoder.encodeRun(rootAST, true);
                 
                 if (report.numErrors == 0) {
                     encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
                     success = true;
                 }
-            }*/
+            }
         }
         
         if (success) {

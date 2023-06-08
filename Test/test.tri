@@ -1,1 +1,5 @@
-putint (1)
+let
+	var k := 5
+in
+	putint(k)
+end
