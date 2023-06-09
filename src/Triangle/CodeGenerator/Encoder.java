@@ -230,9 +230,9 @@ public final class Encoder implements Visitor {
   @Override
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
     Frame frame = (Frame) o;
-    int currentInstrAddress = nextInstrAddr;
+    int actualAddress = nextInstrAddr;
     ast.PFs.visit(this,frame);
-    nextInstrAddr = currentInstrAddress;
+    nextInstrAddr = actualAddress;
     return (Integer) ast.PFs.visit(this,frame);
   }
 
@@ -877,6 +877,8 @@ public final class Encoder implements Visitor {
       int displacement = ((EqualityRoutine) ast.decl.entity).displacement;
       emit(Machine.LOADLop, 0, 0, frame.size / 2);
       emit(Machine.CALLop, Machine.SBr, Machine.PBr, displacement);
+    } else {
+      emit(Machine.CALLop, 0, Machine.CBr,0);
     }
     return null;
   }
