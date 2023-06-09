@@ -878,7 +878,7 @@ public final class Encoder implements Visitor {
       emit(Machine.LOADLop, 0, 0, frame.size / 2);
       emit(Machine.CALLop, Machine.SBr, Machine.PBr, displacement);
     } else {
-      emit(Machine.CALLop, 0, Machine.CBr,0);
+      nextInstrAddr++;
     }
     return null;
   }
