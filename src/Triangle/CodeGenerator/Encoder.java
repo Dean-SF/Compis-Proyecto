@@ -157,6 +157,31 @@ public final class Encoder implements Visitor {
 
   @Override
   public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
+    Frame frame = (Frame) o;
+    int jumpAddr, loopAddr;
+
+    emit(Machine.LOADLop, 0, 0, 0); // creamos variable de control
+
+    jumpAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    loopAddr = nextInstrAddr;
+    ast.C.visit(this, frame);
+    
+    emit(Machine.LOADop, 1, Machine.SBr, frame.size); // Cargamos variable de control
+    emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement); // sumamos 1 al valor de la 
+                                                                              // variable de control
+
+    emit(Machine.STOREop, 1, Machine.SBr, frame.size); // Guardamos el valor sumado en la direccion
+                                                         // de la variable de control
+    patch(jumpAddr, nextInstrAddr);                      
+    
+    emit(Machine.LOADop, 1, Machine.SBr, frame.size); // cargamos la variable de control
+    ast.E.visit(this, frame); // cargamos la cantidad de la expresion que nos dice cuantas veces realizar
+                              // ciclos
+
+    emit(Machine.CALLop,0, Machine.PBr,Machine.ltDisplacement); // Comparamos si es menor
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr); // Si es menor repetimos ciclo
+    emit(Machine.POPop, 0, 0, 1); // sacamos de la pila la variable de control
     return null;
   }
 

@@ -1,0 +1,16 @@
+let
+  var i := 8;
+  var j := 20
+in
+repeat i times do
+	putint(1)
+end;
+puteol();
+let
+  var k := 700
+in
+  putint(i);
+  puteol();
+  putint(k)
+end
+end
