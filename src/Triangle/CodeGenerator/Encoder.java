@@ -175,14 +175,23 @@ public final class Encoder implements Visitor {
 
   @Override
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitRecDeclaration'");
+    Frame frame = (Frame) o;
+    int currentInstrAddress = nextInstrAddr;
+    ast.PFs.visit(this,frame);
+    nextInstrAddr = currentInstrAddress;
+    return (Integer) ast.PFs.visit(this,frame);
   }
 
   @Override
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitPrivDeclaration'");
+    Frame frame1 = (Frame) o;
+    int extraSize1;
+    int extraSize2;
+    
+    extraSize1 = ((Integer) ast.D1.visit(this, frame1));
+    Frame frame2 = new Frame(frame1,extraSize1);
+    extraSize2 = ((Integer) ast.D2.visit(this, frame2));
+    return extraSize1 + extraSize2;
   }
 
   @Override
@@ -211,20 +220,54 @@ public final class Encoder implements Visitor {
 
   @Override
   public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitProcedureProc_Funcs'");
+    Frame frame = (Frame) o;
+    int jumpAddr = nextInstrAddr;
+    int argsSize = 0;
+
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    ast.entity = new KnownRoutine (Machine.closureSize, frame.level,
+                                nextInstrAddr);
+    writeTableDetails(ast);
+    if (frame.level == Machine.maxRoutineLevel)
+      reporter.reportRestriction("can't nest routines so deeply");
+    else {
+      Frame frame1 = new Frame(frame.level + 1, 0);
+      argsSize = ((Integer) ast.FPS.visit(this, frame1)).intValue();
+      Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
+      ast.C.visit(this, frame2);
+    }
+    emit(Machine.RETURNop, 0, 0, argsSize);
+    patch(jumpAddr, nextInstrAddr);
+    return new Integer(0);
   }
 
   @Override
   public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitFunctionProc_Funcs'");
+    Frame frame = (Frame) o;
+    int jumpAddr = nextInstrAddr;
+    int argsSize = 0, valSize = 0;
+
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    ast.entity = new KnownRoutine(Machine.closureSize, frame.level, nextInstrAddr);
+    writeTableDetails(ast);
+    if (frame.level == Machine.maxRoutineLevel)
+      reporter.reportRestriction("can't nest routines more than 7 deep");
+    else {
+      Frame frame1 = new Frame(frame.level + 1, 0);
+      argsSize = ((Integer) ast.FPS.visit(this, frame1)).intValue();
+      Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
+      valSize = ((Integer) ast.E.visit(this, frame2)).intValue();
+    }
+    emit(Machine.RETURNop, valSize, 0, argsSize);
+    patch(jumpAddr, nextInstrAddr);
+    return new Integer(0);
   }
 
   @Override
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitSequentialProcFuncs'");
+    ast.PF1.visit(this, o);
+    ast.PF2.visit(this, o);
+    return new Integer(0);
   }
 
   @Override
@@ -323,12 +366,11 @@ public final class Encoder implements Visitor {
   }
 
   public Object visitCallExpression(CallExpression ast, Object o) {
-    /*Frame frame = (Frame) o;
+    Frame frame = (Frame) o;
     Integer valSize = (Integer) ast.type.visit(this, null);
     Integer argsSize = (Integer) ast.APS.visit(this, frame);
-    ast.I.visit(this, new Frame(frame.level, argsSize));
-    return valSize;*/
-    return null; //borrar esto despues
+    ast.LI.visit(this, new Frame(frame.level, argsSize));
+    return valSize;
   }
 
   public Object visitCharacterExpression(CharacterExpression ast,

@@ -1,5 +1,14 @@
 let
-	var k := 5
+	rec
+		func doble(var i : Integer) : Integer ~
+			triplicar(i) / 3*2
+		|
+		func triplicar(var i : Integer) : Integer ~
+			i + doble(i)
+		|
+		func duplicar(var i : Integer) : Integer ~
+			doble(i)
+	end
 in
-	putint(k)
+	skip
 end

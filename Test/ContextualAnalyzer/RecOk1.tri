@@ -9,7 +9,6 @@ rec
   func m(): Integer ~ 10
 
 end
-
 in
-  putint (1)
+  putint (hola)
 end
