@@ -1,0 +1,11 @@
+! se debe cumplir que 'hola' tenga un valor menor a 10
+! 'hola' adquiere inicialmente el valor 5, y va aumentando
+! en cada ciclo, pero adicionalmente se debe comprobar que
+! hola >= 7 sea falso (contrario al while), entonces
+! son dos condiciones, que hola sea menor a 10 Y hola 
+! no sea mayor o igual a 7, por lo que esto imprime
+! numeros del 5 al 6 (5, 6)
+for hola := 5 .. 10 until hola >= 7 do
+  putint(hola);
+  puteol()
+end

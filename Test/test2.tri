@@ -1,16 +1,21 @@
+! Aca pues el repeat debe imprimir 8 veces 1
+! despues se deberia imprimir la variable i
+! por ultimo la k, esto porque se debe eliminar la memoria
+! de la variable de control del repeat entonces
+! estaba probando que no se sobre escribiera i
+! cuando creaba k
 let
-  var i := 8;
-  var j := 20
+  var i := 8
 in
-repeat i times do
-	putint(1)
-end;
-puteol();
-let
-  var k := 700
-in
-  putint(i);
+  repeat i times do
+    putint(1)
+  end;
   puteol();
-  putint(k)
-end
+  let
+    var k := 700
+  in
+    putint(i);
+    puteol();
+    putint(k)
+  end
 end

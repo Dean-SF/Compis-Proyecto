@@ -211,29 +211,144 @@ public final class Encoder implements Visitor {
 
   @Override
   public Object visitForCommand(ForCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitForCommand'");
+    Frame frame = (Frame) o;
+    int loopAddr, cmpAddr;
+    ObjectAddress ctrlVarAddr;
+
+    // Creacion de la variable de control visible para el For
+    // Por el analisis contextual esta no podria ser editada
+    ast.I.visit(this, frame); 
+    ctrlVarAddr = ((KnownAddress) ast.I.decl.entity).address;
+    int valSize = (int) ast.E1.visit(this,frame); // valor inicial de la variable de control
+    emit(Machine.STOREop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Guardar el valor inicial del control var
+    
+    cmpAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    loopAddr = nextInstrAddr;
+
+    ast.C.visit(this, o);
+
+    // incremento de control var
+    emit(Machine.LOADop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Obtener valor de control var
+    emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement); // sumamos 1 al valor de la 
+                                                                              // variable de control
+    emit(Machine.STOREop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Guardar incremento
+    
+    patch(cmpAddr, nextInstrAddr); // salto a la comprobacion
+
+    // comprobacion para continuar ciclo
+    emit(Machine.LOADop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Obtener valor de control var
+    ast.E2.visit(this,frame);  // obtener la expresion 2
+    emit(Machine.CALLop,0, Machine.PBr,Machine.leDisplacement); // Comparamos si es menor
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr); // Si es menor continuamos a los comandos
+
+    
+    emit(Machine.POPop, 0, 0, valSize);
+    
+    return null;
   }
 
   @Override
   public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitForWhileCommand'");
+    Frame frame = (Frame) o;
+    int loopAddr, cmpAddr, finishAddr;
+    ObjectAddress ctrlVarAddr;
+
+    // Creacion de la variable de control visible para el For
+    // Por el analisis contextual esta no podria ser editada
+    ast.I.visit(this, frame); 
+    ctrlVarAddr = ((KnownAddress) ast.I.decl.entity).address;
+    int valSize = (int) ast.E1.visit(this,frame); // valor inicial de la variable de control
+    emit(Machine.STOREop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Guardar el valor inicial del control var
+    
+    cmpAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    finishAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    loopAddr = nextInstrAddr;
+
+    ast.C.visit(this, o);
+
+    // incremento de control var
+    emit(Machine.LOADop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Obtener valor de control var
+    emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement); // sumamos 1 al valor de la 
+                                                                              // variable de control
+    emit(Machine.STOREop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Guardar incremento
+    
+    patch(cmpAddr, nextInstrAddr); // salto a la comprobacion
+
+    // comprobacion para continuar ciclo
+    // comprobacion del for comun
+    emit(Machine.LOADop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Obtener valor de control var
+    ast.E2.visit(this,frame);  // obtener la expresion 2
+    emit(Machine.CALLop,0, Machine.PBr,Machine.leDisplacement); // Comparamos si es menor
+    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, finishAddr); // En este caso si es verdadero vamos a pasar 
+                                                                       // a la siguiente comprobacion de lo contrario
+                                                                       // termina el ciclo
+    // comprobacion del while                                                                   
+    ast.E3.visit(this,frame);  // calculo de la expression booleana
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr); // repetimos ciclo si es verdadero si no, termina
+
+    patch(finishAddr, nextInstrAddr);
+    emit(Machine.POPop, 0, 0, valSize);
+    
+    return null;
   }
 
   @Override
   public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'visitForUntilCommand'");
+    Frame frame = (Frame) o;
+    int loopAddr, cmpAddr, finishAddr;
+    ObjectAddress ctrlVarAddr;
+
+    // Creacion de la variable de control visible para el For
+    // Por el analisis contextual esta no podria ser editada
+    ast.I.visit(this, frame); 
+    ctrlVarAddr = ((KnownAddress) ast.I.decl.entity).address;
+    int valSize = (int) ast.E1.visit(this,frame); // valor inicial de la variable de control
+    emit(Machine.STOREop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Guardar el valor inicial del control var
+    
+    cmpAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    finishAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    loopAddr = nextInstrAddr;
+
+    ast.C.visit(this, o);
+
+    // incremento de control var
+    emit(Machine.LOADop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Obtener valor de control var
+    emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement); // sumamos 1 al valor de la 
+                                                                              // variable de control
+    emit(Machine.STOREop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Guardar incremento
+    
+    patch(cmpAddr, nextInstrAddr); // salto a la comprobacion
+
+    // comprobacion para continuar ciclo
+    // comprobacion del for comun
+    emit(Machine.LOADop, valSize, Machine.SBr, ctrlVarAddr.displacement); // Obtener valor de control var
+    ast.E2.visit(this,frame);  // obtener la expresion 2
+    emit(Machine.CALLop,0, Machine.PBr,Machine.leDisplacement); // Comparamos si es menor
+    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, finishAddr); // En este caso si es verdadero vamos a pasar 
+                                                                       // a la siguiente comprobacion de lo contrario
+                                                                       // termina el ciclo
+    // comprobacion del until                                                                  
+    ast.E3.visit(this,frame);  // calculo de la expression booleana
+    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr); // repetimos ciclo si es falso si no, termina
+
+    patch(finishAddr, nextInstrAddr);
+    emit(Machine.POPop, 0, 0, valSize);
+    
+    return null;
   }
 
   @Override
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
-    Frame frame = (Frame) o;
-    int actualAddress = nextInstrAddr;
-    ast.PFs.visit(this,frame);
-    nextInstrAddr = actualAddress;
-    return (Integer) ast.PFs.visit(this,frame);
+    int initialAddress = nextInstrAddr; // necesitamos la direccion inicial antes de la primer pasada
+    ast.PFs.visit(this,(Frame) o); // Primera pasada
+    nextInstrAddr = initialAddress; // restauramos la direccion para colocar todo como corresponde
+    ast.PFs.visit(this,(Frame) o); // Segunda pasada
+    return 0; // Ni los procedimientos ni las funciones retornan valores relevantes, retornamos 0
   }
 
   @Override
@@ -877,7 +992,9 @@ public final class Encoder implements Visitor {
       int displacement = ((EqualityRoutine) ast.decl.entity).displacement;
       emit(Machine.LOADLop, 0, 0, frame.size / 2);
       emit(Machine.CALLop, Machine.SBr, Machine.PBr, displacement);
-    } else {
+    } else if(ast.decl instanceof VarDeclaration) {
+      ast.decl.visit(this, o);
+    } else if(ast.decl.entity == null) {
       nextInstrAddr++;
     }
     return null;
