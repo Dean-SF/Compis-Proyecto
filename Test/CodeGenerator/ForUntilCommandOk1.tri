@@ -1,0 +1,7 @@
+let 
+	var x : Integer
+in 
+	for n := 0 .. 5 until n < 13 do
+		skip
+	end
+end
