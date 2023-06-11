@@ -124,7 +124,10 @@ public final class Encoder implements Visitor {
   public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
     return ast.I.visit(this, o);
   }
-
+  
+  /*
+   * Hecho por Andrea
+   */
   @Override
   public Object visitRepeatWhileCommand(RepeatWhileCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -140,6 +143,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Andrea
+   */
   @Override
   public Object visitRepeatUntilCommand(RepeatUntilCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -154,7 +160,9 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
     return null;
   }
-
+  /*
+   * Hecho por Deyan
+   */
   @Override
   public Object visitRepeatTimesCommand(RepeatTimesCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -185,6 +193,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Andrea
+   */
   @Override
   public Object visitRepeatDoWhileCommand(RepeatDoWhileCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -196,7 +207,9 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
     return null;
   }
-
+  /*
+   * Hecho por Andrea
+   */
   @Override
   public Object visitRepeatDoUntilCommand(RepeatDoUntilCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -208,7 +221,10 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
     return null;
   }
-
+  
+  /*
+   * Hecho por Deyan
+   */
   @Override
   public Object visitForCommand(ForCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -248,6 +264,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Deyan
+   */
   @Override
   public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -295,6 +314,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Deyan
+   */
   @Override
   public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
     Frame frame = (Frame) o;
@@ -342,6 +364,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Ericka
+   */
   @Override
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
     int initialAddress = nextInstrAddr; // necesitamos la direccion inicial antes de la primer pasada
@@ -351,28 +376,32 @@ public final class Encoder implements Visitor {
     return 0; // Ni los procedimientos ni las funciones retornan valores relevantes, retornamos 0
   }
 
+  /*
+   * Hecho por Ericka
+   */
   @Override
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
     Frame frame1 = (Frame) o;
-    int extraSize1;
-    int extraSize2;
-    
-    extraSize1 = ((Integer) ast.D1.visit(this, frame1));
-    Frame frame2 = new Frame(frame1,extraSize1);
-    extraSize2 = ((Integer) ast.D2.visit(this, frame2));
-    return extraSize1 + extraSize2;
+    int firstDeclSize,secondDeclSize;
+    firstDeclSize = ((Integer) ast.D1.visit(this, frame1));
+    Frame frame2 = new Frame(frame1,firstDeclSize);
+    secondDeclSize = ((Integer) ast.D2.visit(this, frame2));
+    return firstDeclSize + secondDeclSize;
   }
 
+  /*
+   * Hecho por Ericka
+   */
   @Override
   public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
     Frame frame = (Frame) o;
 
-    int extraSize = ((Integer) ast.E.visit(this, frame)).intValue(); 
+    int valSize = ((Integer) ast.E.visit(this, frame)); 
     
     ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
 
     writeTableDetails(ast);
-    return new Integer(extraSize);
+    return new Integer(valSize);
   }
 
   @Override
@@ -387,6 +416,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Ericka
+   */
   @Override
   public Object visitProcedureProc_Funcs(ProcedureProc_Funcs ast, Object o) {
     Frame frame = (Frame) o;
@@ -409,7 +441,9 @@ public final class Encoder implements Visitor {
     patch(jumpAddr, nextInstrAddr);
     return new Integer(0);
   }
-
+  /*
+   * Hecho por Ericka
+   */
   @Override
   public Object visitFunctionProc_Funcs(FunctionProc_Funcs ast, Object o) {
     Frame frame = (Frame) o;
@@ -432,6 +466,9 @@ public final class Encoder implements Visitor {
     return new Integer(0);
   }
 
+  /*
+   * Hecho por Ericka
+   */
   @Override
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
     ast.PF1.visit(this, o);
@@ -439,11 +476,17 @@ public final class Encoder implements Visitor {
     return new Integer(0);
   }
 
+  /*
+   * Hecho por Deyan
+   */
   @Override
   public Object visitSimpleVname(SimpleVname ast, Object o) {
     return ast.VAR.visit(this, null);
   }
 
+  /*
+   * Hecho por Deyan
+   */
   @Override
   public Object visitCompoundVname(CompoundVname ast, Object o) {
     reporter.reportRestriction("Feature not implemented");
@@ -459,6 +502,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Modificado por Deyan
+   */
   public Object visitCallCommand(CallCommand ast, Object o) {
     Frame frame = (Frame) o;
     Integer argsSize = (Integer) ast.APS.visit(this, frame);
@@ -466,10 +512,16 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Hecho por Deyan
+   */
   public Object visitSkipCommand(SkipCommand ast, Object o) {
     return null;
   }
 
+  /*
+   * Hecho por Andrea
+   */
   public Object visitIfCommand(IfCommand ast, Object o) {
     Frame frame = (Frame) o;
     int jumpifAddr, jumpAddr;
@@ -501,22 +553,6 @@ public final class Encoder implements Visitor {
     return null;
   }
 
-  /* 
-  public Object visitWhileCommand(WhileCommand ast, Object o) {
-    Frame frame = (Frame) o;
-    int jumpAddr, loopAddr;
-
-    jumpAddr = nextInstrAddr;
-    emit(Machine.JUMPop, 0, Machine.CBr, 0);
-    loopAddr = nextInstrAddr;
-    ast.C.visit(this, frame);
-    patch(jumpAddr, nextInstrAddr);
-    ast.E.visit(this, frame);
-    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-    return null;
-  }*/
-
-
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object o) {
     ast.type.visit(this, null);
@@ -534,6 +570,9 @@ public final class Encoder implements Visitor {
     return valSize;
   }
 
+  /*
+   * Modificado por Deyan
+   */
   public Object visitCallExpression(CallExpression ast, Object o) {
     Frame frame = (Frame) o;
     Integer valSize = (Integer) ast.type.visit(this, null);
@@ -973,6 +1012,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  /*
+   * Modificado por Deyan
+   */
   public Object visitIdentifier(Identifier ast, Object o) {
     Frame frame = (Frame) o;
     if (ast.decl.entity instanceof KnownRoutine) {
@@ -1280,6 +1322,9 @@ public final class Encoder implements Visitor {
   // frameSize is the anticipated size of the local stack frame when
   // the constant or variable is fetched at run-time.
   // valSize is the size of the constant or variable's value.
+  /*
+   * Modificado por Deyan
+   */
   private void encodeStore(Vname vname, Frame frame, int valSize) {
     Varname V = vnameToVarname(vname); 
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
@@ -1319,7 +1364,9 @@ public final class Encoder implements Visitor {
   // frameSize is the anticipated size of the local stack frame when
   // the constant or variable is fetched at run-time.
   // valSize is the size of the constant or variable's value.
-
+  /*
+   * Modificado por Deyan
+   */
   private void encodeFetch(Vname vname, Frame frame, int valSize) {
     Varname V = vnameToVarname(vname);
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
@@ -1364,7 +1411,9 @@ public final class Encoder implements Visitor {
   // currentLevel is the routine level where the vname occurs.
   // frameSize is the anticipated size of the local stack frame when
   // the variable is addressed at run-time.
-
+  /*
+   * Modificado por Deyan
+   */
   private void encodeFetchAddress (Vname vname, Frame frame) {
     Varname V = vnameToVarname(vname);
     RuntimeEntity baseObject = (RuntimeEntity) V.visit(this, frame);
@@ -1387,7 +1436,9 @@ public final class Encoder implements Visitor {
       }
     }
   }
-
+  /*
+   * Hecho por Deyan
+   */
   private Varname vnameToVarname(Vname v) {
     if(v instanceof SimpleVname) {
       return ((SimpleVname) v).VAR;
