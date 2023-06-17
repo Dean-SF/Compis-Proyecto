@@ -513,15 +513,12 @@ public final class Encoder implements Visitor {
   }
 
   /*
-   * Hecho por Deyan
+   * Hecho por Andrea
    */
   public Object visitSkipCommand(SkipCommand ast, Object o) {
     return null;
   }
 
-  /*
-   * Hecho por Andrea
-   */
   public Object visitIfCommand(IfCommand ast, Object o) {
     Frame frame = (Frame) o;
     int jumpifAddr, jumpAddr;
@@ -1072,6 +1069,10 @@ public final class Encoder implements Visitor {
 
   // Value-or-variable names
   /* */
+
+  /*
+   * Modificado por Deyan
+   */
   public Object visitDotVarname(DotVarname ast, Object o) {
     Frame frame = (Frame) o;
     RuntimeEntity baseObject = (RuntimeEntity) ast.V.visit(this, frame);
@@ -1081,12 +1082,18 @@ public final class Encoder implements Visitor {
     return baseObject;
   }
 
+  /*
+   * Modificado por Deyan
+   */
   public Object visitSimpleVarname(SimpleVarname ast, Object o) {
     ast.offset = 0;
     ast.indexed = false;
     return ast.I.decl.entity;
   }
 
+  /*
+   * Modificado por Deyan
+   */
   public Object visitSubscriptVarname(SubscriptVarname ast, Object o) {
     Frame frame = (Frame) o;
     RuntimeEntity baseObject;
